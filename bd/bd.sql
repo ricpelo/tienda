@@ -1,13 +1,13 @@
 -- BD TIENDA ON LINE
 
-drop table if not exists roles cascade;
+drop table if exists roles cascade;
 
 create table roles (
-    id bigserial constraint pk_roles primary key;
+    id bigserial constraint pk_roles primary key,
     descripcion varchar(15)
 );
 
-drop table if not exists usuarios cascade;
+drop table if exists usuarios cascade;
 
 create table usuarios (
     id       bigserial   constraint pk_usuarios primary key,
@@ -19,7 +19,7 @@ create table usuarios (
                          on update cascade
 );
 
-drop table if not exists clientes cascade;
+drop table if exists clientes cascade;
 
 create table clientes (
     id            bigserial    constraint pk_clientes primary key,
@@ -36,7 +36,7 @@ create table clientes (
                                on delete no action on update cascade
 );
 
-drop table if not exists articulos cascade;
+drop table if exists articulos cascade;
 
 create table articulos (
     id          bigserial constraint pk_articulos primary key,
@@ -46,7 +46,7 @@ create table articulos (
     existencias int
 );
 
-drop table if not exists pedidos cascade;
+drop table if exists pedidos cascade;
 
 create table pedidos (
     id           bigint constraint pk_pedidos primary key,
@@ -57,7 +57,7 @@ create table pedidos (
     gastos_envio numeric(4,2)
 );
 
-drop table if not exists lineas_pedidos cascade;
+drop table if exists lineas_pedidos cascade;
 
 create table lineas_pedidos (
     id          bigint       constraint pk_lineas_pedidos primary key,
