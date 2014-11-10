@@ -5,11 +5,8 @@
 	<title>tienda online</title>
 </head>
 <body><?php
-	function conectar()
-  {
-    return pg_connect("host=localhost user=gest password=gest
-                       dbname=videoclub");
-  }
+
+  require '../comunes/auxiliar.php';
 
   $con = conectar();
     
