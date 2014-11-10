@@ -1,4 +1,4 @@
--- BD TIENDA ON LINE
+-- BASE DE DATOS TIENDA ON LINE
 
 drop table if exists roles cascade;
 
