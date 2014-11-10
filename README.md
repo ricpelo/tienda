@@ -1,6 +1,6 @@
 tienda
 ======
 
-Tienda online de 2º DAW
+Tienda online
 
-Nuevos cambios en el archivo README
+Nuevos cambios

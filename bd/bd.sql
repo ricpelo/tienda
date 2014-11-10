@@ -1,5 +1,4 @@
--- BASE DE DATOS TIENDA ON LINE
--- Copyright (c) 2014 2º DAW
+-- BD TIENDA ON LINE
 
 drop table if exists roles cascade;
 
