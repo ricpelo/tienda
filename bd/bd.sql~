@@ -55,12 +55,6 @@ create table articulos (
     existencias int
 );
 
-insert into articulos(codigo,descripcion,precio,existencias)
-values (1,'fuente de alimentacion xx',20,100);
-
-insert into articulos(codigo,descripcion,precio,existencias)
-values (2,'teclado xx',5,200);
-
 drop table if exists pedidos cascade;
 
 create table pedidos (
