@@ -55,10 +55,10 @@ create table pedidos (
                         references clientes (id)
                         on delete no action on update cascade,
 -- Se duplican los datos del cliente para tenerlos en esta misma tabla --
-    codigo        numeric(6)   not null constraint uq_clientes_codigo unique,
+    codigo        numeric(6)   not null,
     nombre        varchar(15)  not null,
     apellidos     varchar (30) not null,
-    dni           varchar(9)   not null constraint uq_clientes_dni unique,
+    dni           varchar(9)   not null,
     direccion     varchar(40),
     poblacion     varchar(40),
     codigo_postal char(5)      constraint ck_clientes_codigo_postal
@@ -74,9 +74,8 @@ create table lineas_pedidos (
     pedido_id   bigint       not null constraint fk_lineas_pedidos_pedidos
                              references pedidos (id),
 -- Se duplican los datos del artículo para tenerlos en esta misma tabla --
-    codigo      numeric(13) not null constraint uq_articulos_codigo unique,
-    articulo_id bigint       not null constraint fk_lineas_pedidos_articulos
-                             references articulos (id),
+    codigo      numeric(13) not null,
+    articulo_id bigint       not null,
     descripcion varchar(50),
     precio      numeric(6,2) not null,
     cantidad    numeric(4,2) not null
