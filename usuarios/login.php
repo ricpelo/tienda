@@ -1,7 +1,8 @@
+<?php session_start(); ?> 
 <html>
 	<head>
-		<meta charset="utf-8">
-		<title> login</title> 
+		<meta charset="utf-8"/>
+		<title>LOGIN</title> 
 	</head>
 	<body><?php
 		
@@ -11,14 +12,14 @@
 				$nick = trim($_POST['nick']);
 				$password =trim($_POST['password']);
 				$con =conectar();
-				$res = ($con, "select id
+				$res = pg_query($con, "select id 
 									from usuarios
 									where nick = '$nick' and
 											password = md5('$password')"); 
 		    	if(pg_num_rows($res) > 0):
-		     		$fila = pg_fetch_assoc($res, 0));
-		     		$_SESSION['usuario'] = $fila['id']];
-		     		header(Location: /tienda/);          // No se que index debe coger  
+		     		$fila = pg_fetch_assoc($res, 0);
+		     		$_SESSION['usuario'] = $fila['id'];
+		     		//header(Location: /tienda/);   No se que index debe CARGAR  
 			 	else: ?>
 			 		<h4>Error: Contraseña no válida </h4><?php
 			 	endif;
