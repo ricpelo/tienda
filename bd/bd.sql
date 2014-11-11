@@ -49,7 +49,8 @@ create table articulos (
 drop table if exists pedidos cascade;
 
 create table pedidos (
-    id           bigint constraint pk_pedidos primary key,
+    id           bigserial constraint pk_pedidos primary key,
+    numero       numeric(8,0) not null constraint uq_pedidos_codigo unique,
     cliente_id   bigint not null constraint fk_pedidos_clientes
                         references clientes (id)
                         on delete no action on update cascade,
@@ -60,7 +61,7 @@ create table pedidos (
 drop table if exists lineas_pedidos cascade;
 
 create table lineas_pedidos (
-    id          bigint       constraint pk_lineas_pedidos primary key,
+    id          bigserial       constraint pk_lineas_pedidos primary key,
     pedido_id   bigint       not null constraint fk_lineas_pedidos_pedidos
                              references pedidos (id),
     articulo_id bigint       not null constraint fk_lineas_pedidos_articulos
