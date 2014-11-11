@@ -7,9 +7,6 @@ create table roles (
     descripcion varchar(15)
 );
 
-insert into roles(descripcion)
-values ('administrador');
-
 drop table if exists usuarios cascade;
 
 create table usuarios (
@@ -21,10 +18,6 @@ create table usuarios (
                          references roles (id) on delete no action
                          on update cascade
 );
-
-insert into usuarios(nick,password,rol_id)
-values ('pepe',md5('pepe'),1),
-       ('maria',md5('maria'),1);
 
 drop table if exists clientes cascade;
 
@@ -43,9 +36,6 @@ create table clientes (
                                on delete no action on update cascade
 );
 
-insert into clientes(codigo,nombre,apellidos,dni,usuario_id)
-values (100,'pepe','ramirez','659834763',1);
-
 drop table if exists articulos cascade;
 
 create table articulos (
@@ -56,12 +46,6 @@ create table articulos (
     existencias int
 );
 
-insert into articulos(codigo,descripcion,precio,existencias)
-values (1,'fuente de alimentacion xx',20,100);
-
-insert into articulos(codigo,descripcion,precio,existencias)
-values (2,'teclado xx',5,200);
-
 drop table if exists pedidos cascade;
 
 create table pedidos (
@@ -70,6 +54,15 @@ create table pedidos (
     cliente_id   bigint not null constraint fk_pedidos_clientes
                         references clientes (id)
                         on delete no action on update cascade,
+-- Se duplican los datos del cliente para tenerlos en esta misma tabla --
+    codigo        numeric(6)   not null constraint uq_clientes_codigo unique,
+    nombre        varchar(15)  not null,
+    apellidos     varchar (30) not null,
+    dni           varchar(9)   not null constraint uq_clientes_dni unique,
+    direccion     varchar(40),
+    poblacion     varchar(40),
+    codigo_postal char(5)      constraint ck_clientes_codigo_postal
+                               check (length(codigo_postal) = 5),
     importe      numeric(8,2),
     gastos_envio numeric(4,2)
 );
@@ -80,8 +73,11 @@ create table lineas_pedidos (
     id          bigserial       constraint pk_lineas_pedidos primary key,
     pedido_id   bigint       not null constraint fk_lineas_pedidos_pedidos
                              references pedidos (id),
+-- Se duplican los datos del artículo para tenerlos en esta misma tabla --
+    codigo      numeric(13) not null constraint uq_articulos_codigo unique,
     articulo_id bigint       not null constraint fk_lineas_pedidos_articulos
                              references articulos (id),
+    descripcion varchar(50),
     precio      numeric(6,2) not null,
     cantidad    numeric(4,2) not null
 );
