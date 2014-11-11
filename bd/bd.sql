@@ -23,7 +23,8 @@ create table usuarios (
 );
 
 insert into usuarios(nick,password,rol_id)
-values ('pepe',md5('pepe'),1);
+values ('pepe',md5('pepe'),1),
+       ('maria',md5('maria'),1);
 
 drop table if exists clientes cascade;
 
