@@ -7,18 +7,42 @@
 <body><?php
 		require '../comunes/auxiliar.php';
 
+		$errores = array();
+
 		$id = 1;
+
+		function comprobar_codigo($codigo)
+    {
+      global $errores;
+
+      if (is_numeric($codigo))
+      {
+        $codigo = (double) $codigo;
+
+        if ($codigo == (int) $codigo)
+        {
+          $codigo = (int) $codigo;
+          if ($codigo >= -9999999999999 && $codigo <= 9999999999999)
+          {
+            return;
+          }
+        }
+      }
+
+      $errores[] = "El código no es válido.";
+      
+    }
 
 		$con = conectar();
 
 		$res = pg_query($con, "select *
-                             from articulo
+                             from articulos
                             where id = '$id'");
 
 		$codigo = (isset($_GET['codigo'])) ? trim($_GET['codigo']) : "";
-		$descripcion = (isset($_GET['descripcion'])) ? trim($_GET['descripcion']) : "";;
+		$descripcion = (isset($_GET['descripcion'])) ? trim($_GET['descripcion']) : "";
 		$precio = (isset($_GET['precio'])) ? trim($_GET['precio']) : "";;
-		$existencias = (isset($_GET['existencias'])) ? trim($_GET['existencias']) : "";;
+		$existencias = (isset($_GET['existencias'])) ? trim($_GET['existencias']) : "";
 
 		?>
 
