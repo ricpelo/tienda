@@ -7,6 +7,9 @@ create table roles (
     descripcion varchar(15)
 );
 
+insert into roles(descripcion)
+values ('administrador');
+
 drop table if exists usuarios cascade;
 
 create table usuarios (
@@ -18,6 +21,9 @@ create table usuarios (
                          references roles (id) on delete no action
                          on update cascade
 );
+
+insert into usuarios(nick,password,rol_id)
+values ('pepe',md5('pepe'),1);
 
 drop table if exists clientes cascade;
 
@@ -35,6 +41,9 @@ create table clientes (
                                references usuarios (id)
                                on delete no action on update cascade
 );
+
+insert into clientes(codigo,nombre,apellidos,dni,usuario_id)
+values (100,'pepe','ramirez','659834763',1);
 
 drop table if exists articulos cascade;
 

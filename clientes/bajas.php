@@ -8,6 +8,11 @@
   <body>
   <p><?= $codigo = 100;?><p><?php
 
+  if (isset($_SESSION['codigo']))
+  {
+  	$codigo = trim($_POST['codigo']);
+  }
+
   function comprobar_existe($codigo, $con){
   	$res = pg_query($con,"select codigo
   		                  	from clientes
