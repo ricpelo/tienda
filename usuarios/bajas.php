@@ -6,7 +6,7 @@
     <title>Borrar Usuarios</title>
   </head>
   <body>
-  <p><?= $nick = 'pepe';?><p><?php
+  <p><?= $nick = 'maria';?><p><?php
   	
   if (isset($_SESSION['nick']))
   {
