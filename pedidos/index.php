@@ -8,6 +8,23 @@
 
   require '../comunes/auxiliar.php';
 
+  function sentido($orden, $sentido, $k)
+    {
+        if ($orden == $k)
+        {
+            $ret = ($sentido == "asc") ? "desc" : "asc";
+        }
+        else
+        {
+            $ret = "asc";
+        }
+      
+        return $ret;
+    }
+
+    $orden = isset($_GET['orden']) ? $_GET['orden'] : "codigo";
+    $sentido = isset($_GET['sentido']) ? $_GET['sentido'] : "asc";
+
   $con = conectar();
   $id = 1;
   $cols= array('cliente_id' => 'Id del cliente',
@@ -33,6 +50,16 @@
             $where = "where $columna::text = '$criterio'";
           
     }
+     if (!isset($cols[$orden]))
+    {
+        $orden = "cliente_id";
+    }
+    
+    if ($sentido != "asc" && $sentido != "desc")
+    {
+        $sentido = "asc";
+    }
+
 
 
   $res= pg_query($con, "select * from pedidos $where"); ?>
