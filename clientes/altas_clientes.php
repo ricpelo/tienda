@@ -9,10 +9,11 @@
 	require'../comunes/auxiliar.php';
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
-	if (isset($_POST['nick']), isset($_POST['password'])) {
-		$nick=trim($_POST['nick']);
-		$password=trim($_post['password']);
-
+	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo'])) {
+		$codigo=trim($_POST['codigo']);
+		$nombre=trim($_POST['nombre']);
+		$apellidos=trim($_POST['apellidos']);
+		$dni=trim($_POST['dni']);
 		try {
 			//antes de insertar hay que hacer comprobaciones de los datos que vamos a insertar
 			//hacer comprobaciones
@@ -23,8 +24,8 @@
 			$res=pg_query($con,"begin");
 			$res=pg_query($con,"lock table clientes in share mode");
 			//sentencia sql que inserta un registro en la tabla
-			$res=pg_query($con,"insert into clientes (nick, password)
-								values ($nick, $password)");
+			$res=pg_query($con,"insert into clientes (codigo, nombre, apellidos, dni)
+								values ($codigo, '$nombre', '$apellidos', '$dni')");
 
 			//hay que comprobar si se ha insertado correctamente
 
@@ -50,11 +51,17 @@
 
 	<h3>Insertar cliente</h3>
 	<form action="altas_clientes.php" method="post">
-		<label for="nick">Nick *: </label>
-		<input type="text" maxlength="15" name="nick">
-		<label for="passw">Contraseña *: </label>
-		<input type="password" maxlength="32" name="password">
+		<label for="codigo">Codigo *:</label>
+		<input type="text" name="codigo"><br>
+		<label for="nombre">Nombre *: </label>
+		<input type="text" name="nombre"><br>
+		<label for="apellidos">Apellidos *: </label>
+		<input type="text" name="apellidos"><br>
+		<label for="dni">DNI *:</label>
+		<input type="text" name="dni"><br>
+
 		<input type="submit" value="Insertar">
+
 	</form>
 
 <?php
