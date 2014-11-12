@@ -91,21 +91,6 @@
         <input type="button" value="Insertar un nuevo Artículo" />
     </a><?php
 
-    
-    //function hacer_pedido($cliente_id, $importe, $gastos_envio)
-   // {
-     // global $con;
-     
-//$pedidos = pg_query($con, " pedidos (cliente_id, importe, gastos_envio)
-                           //  values ($cliente_id, $importe, $gastos_envio)");
-  //  }
-    
-  // function anular_pedido($id)
-   // {
-  //    global $con;
-      
- //     $pedidos = pg_query($con, "delete from pedidos
-                            // where id::text = '$id'");
     ?>
 </body>
 </html>
