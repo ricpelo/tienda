@@ -7,6 +7,32 @@
 <body>
 	<?php 
 	require'../comunes/auxiliar.php';
+
+	//creamos el array que contendá los errores
+	$errores = array();
+	//definimos las variables por si no lo hemos cojido con $_POST
+	$dni=(isset($_POST['dni']) ? trim($_POST['dni']) : "");
+	//echo($dni);
+	//funcion que comprueba si hay mensages en $errores y lanza una excepcion
+	function comprobar_errores(){
+      global $errores;
+      
+      if (!empty($errores))
+      {
+        throw new Exception();
+      }
+    }
+
+	//funcion que comprueba si el dni está en la bd
+	//comprueba que el dni no sea blanco o mayor de 9
+	function comprobar_dni(){
+		global $errores;
+
+		if ($_POST['dni']=="") {
+			$errores[]="El valor DNI no puede estár vacio";
+			comprobar_errores();
+		}
+	}
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
 	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id'])) {
@@ -19,8 +45,14 @@
 		$codigopostal=trim($_POST['codigopostal']);
 		$usuario_id=trim($_POST['usuario_id']);
 		try {
-			//antes de insertar hay que hacer comprobaciones de los datos que vamos a insertar
-			//hacer comprobaciones
+			//comprobamos el dni
+			comprobar_dni();
+
+
+
+
+			///antes de insertar hay que hacer comprobaciones de los datos que vamos a insertar
+			///hacer comprobaciones
 			
 
 			//conectamos con la base de datos e insertamos los datos
@@ -28,8 +60,10 @@
 			$res=pg_query($con,"begin");
 			$res=pg_query($con,"lock table clientes in share mode");
 			//sentencia sql que inserta un registro en la tabla
-			$res=pg_query($con,"insert into clientes (codigo, nombre, apellidos, dni, direccion, poblacion, codigo_postal, usuario_id)
-								values ($codigo, '$nombre', '$apellidos', '$dni', '$direccion', '$poblacion', '$codigopostal', $usuario_id)");
+			$res=pg_query($con,"insert into clientes 
+								(codigo, nombre, apellidos, dni, direccion, poblacion, codigo_postal, usuario_id)
+								values ($codigo, '$nombre', '$apellidos', '$dni', '$direccion', '$poblacion', 
+									'$codigopostal', $usuario_id)");
 
 			//hay que comprobar si se ha insertado correctamente
 
@@ -40,7 +74,11 @@
 			//para ello se usa goto
 			goto fin;
 		} catch (Exception $e) {
-			//aqui hay que mostrar los herrores del array que hay que crear
+			foreach ($errores as $error) {
+				?>
+				<p>Error: <?= $error ?></p>
+				<?php
+			}
 		}finally{
 			//aqui nos aseguramos que pase lo que pase hacemos commit de la tabla que usabamos y cerramos la conexion si existe
 			if (isset($con) && $con!= FALSE) {
