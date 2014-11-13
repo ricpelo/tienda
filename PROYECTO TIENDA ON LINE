@@ -1,0 +1,14 @@
+PROYECTO TIENDA ON LINE
+
+- Gestión de clientes
+  -ABCM
+- Gestión de artículos
+  -ABCM
+- Gestion de pedidos y carrito
+  -Gestión de carrito.
+  -Finalización pedido.
+- Gestión de usuarios
+  - Login, logout. Alta (Cualquiera).
+  - Permisos y roles de usuarios.
+    -Usuario normal (cliente).
+    -Administrador

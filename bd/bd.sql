@@ -18,7 +18,7 @@ create table usuarios (
                          references roles (id) on delete no action
                          on update cascade
 );
-
+ 
 drop table if exists clientes cascade;
 
 create table clientes (
@@ -51,6 +51,7 @@ drop table if exists pedidos cascade;
 create table pedidos (
     id           bigserial constraint pk_pedidos primary key,
     numero       numeric(8,0) not null constraint uq_pedidos_codigo unique,
+    fecha        date not null default CURRENT_DATE,
     cliente_id   bigint not null constraint fk_pedidos_clientes
                         references clientes (id)
                         on delete no action on update cascade,
