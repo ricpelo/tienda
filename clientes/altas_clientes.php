@@ -9,11 +9,15 @@
 	require'../comunes/auxiliar.php';
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
-	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo'])) {
+	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id'])) {
 		$codigo=trim($_POST['codigo']);
 		$nombre=trim($_POST['nombre']);
 		$apellidos=trim($_POST['apellidos']);
 		$dni=trim($_POST['dni']);
+		$direccion=trim($_POST['direccion']);
+		$poblacion=trim($_POST['poblacion']);
+		$codigopostal=trim($_POST['codigopostal']);
+		$usuario_id=trim($_POST['usuario_id']);
 		try {
 			//antes de insertar hay que hacer comprobaciones de los datos que vamos a insertar
 			//hacer comprobaciones
@@ -24,8 +28,8 @@
 			$res=pg_query($con,"begin");
 			$res=pg_query($con,"lock table clientes in share mode");
 			//sentencia sql que inserta un registro en la tabla
-			$res=pg_query($con,"insert into clientes (codigo, nombre, apellidos, dni)
-								values ($codigo, '$nombre', '$apellidos', '$dni')");
+			$res=pg_query($con,"insert into clientes (codigo, nombre, apellidos, dni, direccion, poblacion, codigo_postal, usuario_id)
+								values ($codigo, '$nombre', '$apellidos', '$dni', '$direccion', '$poblacion', '$codigopostal', $usuario_id)");
 
 			//hay que comprobar si se ha insertado correctamente
 
@@ -45,6 +49,8 @@
 			}
 		}
 	}
+	$con=conectar();
+	$res=pg_query($con, "select id, nick from usuarios");
 	?>
 	
 
@@ -59,6 +65,24 @@
 		<input type="text" name="apellidos"><br>
 		<label for="dni">DNI *:</label>
 		<input type="text" name="dni"><br>
+		<label for="direccion">Dirección: </label>
+		<input type="text" name="direccion"><br>
+		<label for="poblacion">Población: </label>
+		<input type="text" name="poblacion"><br>
+		<label for="codigopostal">Código postal: </label>
+		<input type="text" name="codigopostal"><br>
+
+		<select name="usuario_id" ><?php 
+			for($i=0; $i< pg_num_rows($res); $i++){
+				$fila=pg_fetch_assoc($res, $i);
+				?>
+				<option value="<?= $fila['id'] ?>">
+					<?= $fila['nick']?>
+				</option>
+				<?php
+			}
+			?>
+		</select>
 
 		<input type="submit" value="Insertar">
 
