@@ -18,6 +18,13 @@
         header("Location: ../usuarios/login.php"); 
     }
 
+    function comprobar_errores(){
+      global $errores;
+
+      if(!empty($errores))
+        throw new Exception();
+        
+    }
     function obtener_usuario(){
       $usuario = (isset($_SESSION['usuario'])) ?
                                         (int) trim($_SESSION['usuario']) : "";
@@ -91,6 +98,8 @@
           $errores[] = "El articulo no existe";
       
       }
+
+      comprobar_errores();
     }
 
     function borrar_articulo($id){
@@ -101,15 +110,23 @@
                               where id::text = '$id'");
     }
 
+    try{
+      comprobar_usuario();
+      if(isset($_POST['id'])){
+        borrar_articulo($_POST['id']); 
+        header("Location: index.php");
+      }else{
+        pintar_articulo(obtener_articulo());
+      }
+    }catch(Exception $e){
+      foreach ($errores as $v) { ?>
+        <p><?= $v ?></p> <?php
+      } ?>
+      <a href="index.php"><button>Volver</button></a> <?php
 
-    comprobar_usuario();
-    if(isset($_POST['id'])){
-      borrar_articulo($_POST['id']); 
-      header("Location: index.php");
-    }else{
-      pintar_articulo(obtener_articulo());
+    }finally {
+      pg_close($con);
     }
-
   ?>
   </body>
 </html>
