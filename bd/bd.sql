@@ -31,7 +31,7 @@ create table clientes (
     poblacion     varchar(40),
     codigo_postal char(5)      constraint ck_clientes_codigo_postal
                                check (length(codigo_postal) = 5),
-    usuario_id    bigint       not null, constraint fk_clientes_usuarios
+    usuario_id    bigint       not null constraint fk_clientes_usuarios
                                references usuarios (id)
                                on delete no action on update cascade
 );
