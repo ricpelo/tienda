@@ -41,8 +41,8 @@ drop table if exists articulos cascade;
 create table articulos (
     id          bigserial constraint pk_articulos primary key,
     codigo      numeric(13) not null constraint uq_articulos_codigo unique,
-    descripcion varchar(50),
-    precio      numeric (6,2),
+    descripcion varchar(50) not null,
+    precio      numeric (6,2) not null,
     existencias int
 );
 
