@@ -6,7 +6,7 @@
     <title>Borrar Usuarios</title>
   </head>
   <body>
-  <p><?= $nick = 'Maria';?><p><?php
+  <p><?= $nick = 'Pepe';?><p><?php
   	
   if (isset($_SESSION['nick']))
   {
@@ -29,7 +29,7 @@
                             from usuarios
                           where rol_id = 2");
 
-    if (pg_num_rows($res) = 1)
+    if (pg_num_rows($res) > 1)
     { 
       throw new Exception("El usuario con el nick $nick no puede borrarse porque es un cliente"); 
     } 
