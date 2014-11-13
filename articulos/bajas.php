@@ -9,7 +9,7 @@
     require '../comunes/auxiliar.php';
 
     $con = conectar();
-    $errores[];
+    $errores = [];
 
     $_SESSION['usuario'] = 1;
 
@@ -24,23 +24,73 @@
       return $usuario;
     }
 
+    function pintar_articulo($id){
+      global $con;
+        
+      $res = pg_query($con, "select * 
+                               from articulos
+                              where id::text = '$id'");
+
+      $fila = pg_fetch_assoc($res); ?>
+        
+        <table border="1">
+          <thead>
+            <th>
+              Código      
+            </th>
+            <th>
+              Descripción
+            </th>
+            <th>
+              Precio
+            </th>
+            <th>
+              Existencias
+            </th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <?= $fila['codigo'] ?>
+              </td>
+              <td>
+                <?= $fila['descripcion'] ?>
+              </td>
+              <td>
+                <?= $fila['precio'] ?>
+              </td>
+              <td>
+                <?= $fila['existencias'] ?>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <form action="bajas.php" method="post">
+          <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+          <h3>¿Seguro que desea eliminar el artículo?</h3>
+          <input type="submit" value="Eliminar">
+        </form>
+
+        <?php
+    }
+
     function obtener_articulo(){
       global $con;
       global $errores;
 
-      if (isset($_GET['id']):
+      if(isset($_GET['id'])){
         $id = $_GET['id'];  
 
         $res = pg_query($con, "select * 
-                               from articulos
-                              where id::text = '$id'");
+                                 from articulos
+                                where id::text = '$id'");
 
         if(pg_num_rows($res) == 1)
-          return $res;
+          return $id;
+        else
+          $errores[] = "El articulo no existe";
       
-      else:
-        header("Location: ../index.php"); 
-      endif;
+      }
     }
 
     function borrar_articulo($id){
@@ -53,8 +103,12 @@
 
 
     comprobar_usuario();
-    obtener_articulo();
-    borrar_articulo();
+    if(isset($_POST['id'])){
+      borrar_articulo($_POST['id']); 
+      header("Location: index.php");
+    }else{
+      pintar_articulo(obtener_articulo());
+    }
 
   ?>
   </body>
