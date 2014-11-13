@@ -113,7 +113,7 @@
                         </form>
                     </td>
                     <td>
-                        <form action="confirmar_borrado.php" method="get">
+                        <form action="bajas.php" method="get">
                             <input type="hidden" name="id" 
                                   value="<?=$fila['id']?>">
                             <input type="submit" value="Borrar">
