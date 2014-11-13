@@ -24,17 +24,6 @@
   	} 
   }
 
-  function comprobar_si_cliente($nick,$con){
-    $res = pg_query($con,"select nick 
-                            from usuarios
-                          where rol_id = 2");
-
-    if (pg_num_rows($res) > 1)
-    { 
-      throw new Exception("El usuario con el nick $nick no puede borrarse porque es un cliente"); 
-    } 
-  }
-
   function comprobar_borrado($res){
   	if (pg_affected_rows($res) != 1)
   	{
@@ -56,7 +45,6 @@
   try
   {
   	comprobar_existe($nick,$con);
-    comprobar_si_cliente($nick,$con);
   	$res = pg_query($con,"delete from usuarios
   		                  where nick = '$nick'");
   	comprobar_borrado($res); ?>

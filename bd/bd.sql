@@ -31,7 +31,7 @@ create table clientes (
     poblacion     varchar(40),
     codigo_postal char(5)      constraint ck_clientes_codigo_postal
                                check (length(codigo_postal) = 5),
-    usuario_id    bigint       not null, constraint fk_clientes_usuarios
+    usuario_id    bigint       not null constraint fk_clientes_usuarios
                                references usuarios (id)
                                on delete no action on update cascade
 );
@@ -41,8 +41,8 @@ drop table if exists articulos cascade;
 create table articulos (
     id          bigserial constraint pk_articulos primary key,
     codigo      numeric(13) not null constraint uq_articulos_codigo unique,
-    descripcion varchar(50),
-    precio      numeric (6,2),
+    descripcion varchar(50) not null,
+    precio      numeric (6,2) not null,
     existencias int
 );
 
@@ -74,9 +74,9 @@ create table lineas_pedidos (
     pedido_id   bigint       not null constraint fk_lineas_pedidos_pedidos
                              references pedidos (id),
 -- Se duplican los datos del artículo para tenerlos en esta misma tabla --
-    codigo      numeric(13) not null,
+    codigo      numeric(13)  not null,
     articulo_id bigint       not null,
-    descripcion varchar(50),
+    descripcion varchar(50)  not null,
     precio      numeric(6,2) not null,
     cantidad    numeric(4,2) not null
 );

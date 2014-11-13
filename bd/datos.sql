@@ -15,6 +15,7 @@
                                 ('Pepe', md5('pepe'), 1),
                                 ('Invitado', md5(''), 1);
 
+
 -- ARTICULOS --
 
     insert into articulos (codigo, descripcion, precio, existencias)
