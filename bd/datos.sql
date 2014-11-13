@@ -76,3 +76,4 @@
                               (2, 8433556543445, 'Disco duro Seagate Expansion 2 TB - 2,5", USB 3.0', 80.45, 2),
                               (3, 8499786675192, 'Ibook Sandbook 7" e-ink WIFI-3G 16GB', 99.99, 1),
                               (4, 8433556543445, 'Disco duro Seagate Expansion 2 TB - 2,5", USB 3.0', 80.45, 5);
+
