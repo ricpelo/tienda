@@ -88,10 +88,13 @@
   {
   	comprobar_existe($codigo,$con);
     pintar_cliente($codigo,$con);
-  	$res = pg_query($con,"delete from clientes 
-  		                  where codigo = $codigo");
-  	comprobar_borrado($res); ?>
-  	<p>El cliente se ha borrado correctamente</p><?php
+    if(isset($_POST['codigo'])){
+        $res = pg_query($con,"delete from clientes 
+                        where codigo = $codigo");
+        comprobar_borrado($res); ?>
+        <p>El cliente se ha borrado correctamente</p><?php
+        //header("Location: index.php");
+    }
   }catch(Exception $e) { ?>
   	<p>Error:<?= $e->getMessage() ?></p><?php
   }
