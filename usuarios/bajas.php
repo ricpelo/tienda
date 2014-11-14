@@ -86,7 +86,7 @@
   		                  where nick = '$nick'");
   		comprobar_borrado($res); ?>
   		<p>El cliente se ha borrado correctamente</p><?php
-  		//header("Location: index.php");
+  		header("Location: index.php");
     }
   }catch(Exception $e) { ?>
   	<p>Error:<?= $e->getMessage() ?></p><?php
