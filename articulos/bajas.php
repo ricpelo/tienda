@@ -86,7 +86,7 @@
       global $errores;
 
       if(isset($_GET['id'])){
-        $id = $_GET['id'];  
+        $id = trim($_GET['id']);  
 
         $res = pg_query($con, "select * 
                                  from articulos
