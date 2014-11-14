@@ -116,7 +116,8 @@
         borrar_articulo($_POST['id']); 
         header("Location: index.php");
       }else{
-        pintar_articulo(obtener_articulo());
+        pintar_articulo(obtener_articulo()); ?>
+        <a href="index.php"><button>Volver</button></a> <?php
       }
     }catch(Exception $e){
       foreach ($errores as $v) { ?>
