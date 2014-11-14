@@ -82,6 +82,15 @@
 			comprobar_errores();
 		}
 	}
+
+	//funcion que comprueba si se ha insertado un cliente correctamente
+	function comprobar_insertar($res){
+		global $errores;
+		if ($res==FALSE || pg_affected_rows($res)!=1) {
+			$errores[]="No se ha podido insertar el cliente correctamente";
+			comprobar_errores();
+		}
+	}
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
 	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id']) && isset($_POST['codigopostal'])) {
@@ -117,8 +126,8 @@
 								values ($codigo, '$nombre', '$apellidos', '$dni', '$direccion', '$poblacion', 
 									'$codigopostal', $usuario_id)");
 
-			//hay que comprobar si se ha insertado correctamente
-
+			//comprobamos si la insercion se ha hecho correctamnte
+			comprobar_insertar($res);
 			?><p>El cliente se ha insertado correctamente.</p><?php
 
 			//si el flujo del programa llega aqui, es que se ha insertado un cliente y
