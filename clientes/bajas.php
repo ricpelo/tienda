@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Borrar</title>
+    <title>Borrar Clientes</title>
   </head>
   <body>
   <p><?= $codigo = 110001;?><p><?php
@@ -93,7 +93,7 @@
                         where codigo = $codigo");
         comprobar_borrado($res); ?>
         <p>El cliente se ha borrado correctamente</p><?php
-        //header("Location: index.php");
+        header("Location: index.php");
     }
   }catch(Exception $e) { ?>
   	<p>Error:<?= $e->getMessage() ?></p><?php
