@@ -112,6 +112,9 @@
 
     try{
       comprobar_usuario();
+      $res = pg_query($con, "begin");
+      $res = pg_query($con, "lock table tienda in share mode");
+
       if(isset($_POST['id'])){
         borrar_articulo($_POST['id']); 
         header("Location: index.php");
@@ -126,6 +129,7 @@
       <a href="index.php"><button>Volver</button></a> <?php
 
     }finally {
+      $res = pg_query($con, "commit");
       pg_close($con);
     }
   ?>
