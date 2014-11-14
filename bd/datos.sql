@@ -68,9 +68,9 @@
                                  'Avda. de Compostela, 34', 'Sanlúcar de Barrameda', '11540'),
                                 (14000002, current_date-3, 1, 110001, 'Roberto', 'López Gómez', '31224553H',
                                  'Avda. de Compostela, 34', 'Sanlúcar de Barrameda', '11540'),
-                                (14000003, current_date-2, 2, 410001, 'Juan', 'Rey Sanjosé', '48997345F', 
+                                (14000003, current_date-2, 3, 410001, 'Juan', 'Rey Sanjosé', '48997345F', 
                                  'Avda. República Argentina, 45 Alto', 'Sevilla', '41003'),
-                                (14000004, current_date-1, 2, 410002, 'María José', 'Moreno Luque', '41823099P',
+                                (14000004, current_date-1, 4, 410002, 'María José', 'Moreno Luque', '41823099P',
                                  'Avda. de los Conquistadores, 44', 'Dos Hermanas', '41234');
 
 -- LINEAS PEDIDOS --
