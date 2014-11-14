@@ -33,7 +33,7 @@ create table clientes (
                                check (length(codigo_postal) = 5),
     usuario_id    bigint       not null constraint fk_clientes_usuarios
                                references usuarios (id)
-                               on delete no action on update cascade
+                               on delete set null on update cascade
 );
 
 drop table if exists articulos cascade;
@@ -54,7 +54,7 @@ create table pedidos (
     fecha        date not null default CURRENT_DATE,
     cliente_id   bigint not null constraint fk_pedidos_clientes
                         references clientes (id)
-                        on delete cascade on update cascade,
+                        on delete set null on update cascade,
 -- Se duplican los datos del cliente para tenerlos en esta misma tabla --
     codigo        numeric(6)   not null,
     nombre        varchar(15)  not null,
@@ -73,7 +73,8 @@ drop table if exists lineas_pedidos cascade;
 create table lineas_pedidos (
     id          bigserial       constraint pk_lineas_pedidos primary key,
     pedido_id   bigint       not null constraint fk_lineas_pedidos_pedidos
-                             references pedidos (id),
+                             references pedidos (id)
+                             on delete cascade on update cascade,
     cantidad    numeric(4,2) not null,
 
 -- Se duplican los datos del artículo para tenerlos en esta misma tabla --

@@ -30,6 +30,7 @@
       $usuario_id = $_SESSION['usuario'];
       $con = conectar();
       $res = pg_query($con, "select * from clientes where usuario_id::text = '$usuario_id'");
+      echo pg_affected_rows($res);
       if (pg_affected_rows($res) == 1) {
         $fila = pg_fetch_assoc($res, 0);
         extract($fila);
