@@ -81,10 +81,13 @@
   {
   	comprobar_existe($nick,$con);
   	pintar_usuarios($nick,$con);
-  	$res = pg_query($con,"delete from usuarios
+  	if(isset($_POST['codigo'])){
+  		$res = pg_query($con,"delete from usuarios
   		                  where nick = '$nick'");
-  	comprobar_borrado($res); ?>
-  	<p>El cliente se ha borrado correctamente</p><?php
+  		comprobar_borrado($res); ?>
+  		<p>El cliente se ha borrado correctamente</p><?php
+  		//header("Location: index.php");
+    }
   }catch(Exception $e) { ?>
   	<p>Error:<?= $e->getMessage() ?></p><?php
   }
