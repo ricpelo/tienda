@@ -12,7 +12,7 @@
 	$errores = array();
 	//definimos las variables por si no lo hemos cojido con $_POST
 	$dni=(isset($_POST['dni']) ? trim($_POST['dni']) : "");
-	//echo($dni);
+	
 	//funcion que comprueba si hay mensages en $errores y lanza una excepcion
 	function comprobar_errores(){
       global $errores;
@@ -28,14 +28,63 @@
 	function comprobar_dni(){
 		global $errores;
 
-		if ($_POST['dni']=="") {
+		if (!isset($_POST['dni'])) {
 			$errores[]="El valor DNI no puede estár vacio";
+			comprobar_errores();
+		}
+		if (strlen($_POST['dni']) != 9 ) {
+			$errores[]="El DNI no es valido. No tiene 9 digitos.";
+			comprobar_errores();
+		}
+		$dni=trim($_POST['dni']);
+		$con=conectar();
+		$res=pg_query($con, "select dni
+								from clientes
+								where dni::text = '$dni'");
+
+		if (pg_affected_rows($res)!=0) {
+			$errores[]="El DNI ya está dado de alta en la BD";
+			comprobar_errores();
+		}
+		pg_close($con);
+	}
+
+	function comprobar_codigo(){
+
+		global $errores;
+		
+		if (!isset($_POST['codigo'])) {
+			$errores[]="El CODIGO no puede estár vacio";
+			comprobar_errores();
+		}
+		if (strlen($_POST['codigo']) != 6 ) {
+			$errores[]="El CODIGO no es valido. No tiene 6 digitos.";
+			comprobar_errores();
+		}
+		$codigo=(int)(trim($_POST['codigo']));
+		$con=conectar();
+		$res=pg_query($con, "select codigo 
+								from clientes
+								where codigo= $codigo");
+		
+		if (pg_affected_rows($res)!=0) {
+			$errores[]="El CODIGO ya está dado de alta en la BD";
+			comprobar_errores();
+		}
+
+		pg_close($con);
+	}
+
+	function comprobar_codigo_postal(){
+		global $errores;
+		if (strlen($_POST['codigopostal']) != 5 ) {
+			$errores[]="El CODIGO POSTAL no es valido. No tiene 5 digitos.";
 			comprobar_errores();
 		}
 	}
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
-	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id'])) {
+	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id']) && isset($_POST['codigopostal'])) {
 		$codigo=trim($_POST['codigo']);
 		$nombre=trim($_POST['nombre']);
 		$apellidos=trim($_POST['apellidos']);
@@ -45,10 +94,13 @@
 		$codigopostal=trim($_POST['codigopostal']);
 		$usuario_id=trim($_POST['usuario_id']);
 		try {
+
+			//comprobamos el codigo
+			comprobar_codigo();
 			//comprobamos el dni
 			comprobar_dni();
-
-
+			//comprobamos el codigo postal
+			comprobar_codigo_postal();
 
 
 			///antes de insertar hay que hacer comprobaciones de los datos que vamos a insertar
@@ -97,17 +149,17 @@
 	<form action="altas_clientes.php" method="post">
 		<label for="codigo">Codigo *:</label>
 		<input type="text" name="codigo"><br>
-		<label for="nombre">Nombre *: </label>
-		<input type="text" name="nombre"><br>
-		<label for="apellidos">Apellidos *: </label>
-		<input type="text" name="apellidos"><br>
+		<label for="nombre">Nombre : </label>
+		<input type="text" name="nombre" value="pepito"><br>
+		<label for="apellidos">Apellidos : </label>
+		<input type="text" name="apellidos" value="perez"><br>
 		<label for="dni">DNI *:</label>
 		<input type="text" name="dni"><br>
-		<label for="direccion">Dirección: </label>
-		<input type="text" name="direccion"><br>
+		<label for="direccion" >Dirección: </label>
+		<input type="text" name="direccion" value="mi casa"><br>
 		<label for="poblacion">Población: </label>
-		<input type="text" name="poblacion"><br>
-		<label for="codigopostal">Código postal: </label>
+		<input type="text" name="poblacion" value="chipiona"><br>
+		<label for="codigopostal">Código postal *: </label>
 		<input type="text" name="codigopostal"><br>
 
 		<select name="usuario_id" ><?php 
@@ -118,7 +170,7 @@
 					<?= $fila['nick']?>
 				</option>
 				<?php
-			}
+			}pg_close($con);
 			?>
 		</select>
 
