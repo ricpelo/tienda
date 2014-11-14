@@ -6,7 +6,7 @@
     <title>Borrar Usuarios</title>
   </head>
   <body>
-  <p><?= $nick = 'Pepe';?><p><?php
+  <p><?= $nick = 'pepe';?><p><?php
   	
   if (isset($_SESSION['nick']))
   {
@@ -31,6 +31,41 @@
   	}
   }
 
+  function pintar_usuarios($nick,$con){
+  	$res = pg_query($con,"select * 
+  		  					from usuarios
+  		  				  where nick = '$nick'");
+
+  	$cols = array('nick' => 'Nick',
+  		          'password' => 'Contraseña',
+  		          'rol_id' => 'Id rol'); ?>
+
+    <table border="1">
+      <thead><?php
+        foreach ($cols as $k => $v) : ?> 
+          <th><?= $v ?></th><?php
+        endforeach; ?>
+      </thead>
+          <tbody><?php
+            for ($i = 0; $i < pg_num_rows($res); $i++): 
+              $fila = pg_fetch_assoc($res,$i); ?>
+              <tr><?php
+                 foreach ($cols as $k => $v) : ?> 
+                    <td><?= $fila[$k] ?></td><?php
+                 endforeach; ?>    
+              </tr><?php
+            endfor; ?>
+          </tbody>
+        </table>
+        <form action="bajas.php" method="post">
+          <input type="hidden" name="codigo" value="<?= $fila['codigo'] ?>">
+          <p>¿Desea eliminar el artículo?</p>
+          <input type="submit" value="Eliminar">
+          <a href="index.php"><input type="button" value="Volver"></a>
+        </form>
+    </table><?php
+  }
+
   if (isset($_POST['nick']))
   {
   	$nick = trim($_POST['nick']);
@@ -45,6 +80,7 @@
   try
   {
   	comprobar_existe($nick,$con);
+  	pintar_usuarios($nick,$con);
   	$res = pg_query($con,"delete from usuarios
   		                  where nick = '$nick'");
   	comprobar_borrado($res); ?>

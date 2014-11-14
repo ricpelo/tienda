@@ -6,7 +6,7 @@
     <title>Borrar</title>
   </head>
   <body>
-  <p><?= $codigo = 100;?><p><?php
+  <p><?= $codigo = 110001;?><p><?php
 
   if (isset($_SESSION['codigo']))
   {
@@ -31,6 +31,48 @@
   	}
   }
 
+  function pintar_cliente($codigo,$con){
+    $res = pg_query($con,"select * 
+                            from clientes
+                          where codigo::text = '$codigo'"); 
+
+    $fila = pg_fetch_assoc($res); 
+
+    $cols = array('codigo' => 'Codigo',
+                  'nombre' => 'Nombre',
+                  'apellidos'     => 'Apellidos',
+                  'dni' => 'DNI',
+                  'direccion' => 'Dirección',
+                  'poblacion' => 'Población',
+                  'codigo_postal' => 'Código postal',
+                  'usuario_id' => 'Id usuarios'); ?>
+
+    <table border="1">
+      <thead><?php
+        foreach ($cols as $k => $v) : ?> 
+          <th><?= $v ?></th><?php
+        endforeach; ?>
+      </thead>
+          <tbody><?php
+            for ($i = 0; $i < pg_num_rows($res); $i++): 
+              $fila = pg_fetch_assoc($res,$i); ?>
+              <tr><?php
+                 foreach ($cols as $k => $v) : ?> 
+                    <td><?= $fila[$k] ?></td><?php
+                 endforeach; ?>    
+              </tr><?php
+            endfor; ?>
+          </tbody>
+        </table>
+        <form action="bajas.php" method="post">
+          <input type="hidden" name="codigo" value="<?= $fila['codigo'] ?>">
+          <p>¿Desea eliminar el artículo?</p>
+          <input type="submit" value="Eliminar">
+          <a href="index.php"><input type="button" value="Volver"></a>
+        </form>
+    </table><?php
+  }
+
   if (isset($_POST['codigo']))
   {
   	$codigo = trim($_POST['codigo']);
@@ -45,6 +87,7 @@
   try
   {
   	comprobar_existe($codigo,$con);
+    pintar_cliente($codigo,$con);
   	$res = pg_query($con,"delete from clientes 
   		                  where codigo = $codigo");
   	comprobar_borrado($res); ?>
