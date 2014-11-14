@@ -20,8 +20,8 @@
 		    	if(pg_num_rows($res) > 0):
 		     		$fila = pg_fetch_assoc($res, 0);
 		     		$_SESSION['usuario'] = $fila['id'];	
-		     		header("Location:".$_SESSION['url']);  
-		     		//header("Location: /tienda/articulos");  // Este header es para probar que funciona 
+		     		//header("Location:".$_SESSION['url']);  
+		     		header("Location: /tienda/articulos");  // Este header es para probar que funciona 
 			 	else: ?>
 			 		<h3>Error: Contraseña no válida </h3><?php
 			 	endif;
