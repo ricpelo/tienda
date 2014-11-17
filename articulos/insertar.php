@@ -87,6 +87,16 @@
         }
     }
 
+    function comprobar_existencias($existencias)
+    {
+        global $errores;
+
+        if (!is_numeric($existencias))
+        {
+            $errores[] = "No ha introducido una cantidad correcta en el campo Cantidad";
+        }
+    }
+
     function comprobar_errores()
     {
       global $errores;
@@ -101,9 +111,9 @@
     {
       global $errores;
 
-      $res = pg_query($con, "select codigo
+      $res = pg_query_params($con, "select codigo
                              from articulos
-                             where codigo::text = '$codigo'");
+                             where codigo = $1", array($codigo));
 
       if (pg_num_rows($res) > 0)
       {
@@ -140,6 +150,7 @@
             comprobar_codigo($codigo);
             comprobar_descripcion($descripcion);
             comprobar_precio($precio);
+            comprobar_existencias($existencias);
             comprobar_errores();
 
 
@@ -151,13 +162,14 @@
             comprobar_si_existe($codigo, $con);
 
 
-            $res = pg_query($con, "insert into articulos (codigo, descripcion, precio, existencias) values ($codigo, '$descripcion', $precio, $existencias_2)");
+            $res = pg_query_params($con, "insert into articulos (codigo, descripcion, precio, existencias) values ($1, $2, $3, $4)", array($codigo, $descripcion, $precio, $existencias_2));
 
 
             comprobar_insercion($res); ?>
 
 
             <p>Artículo insertado</p>
+            <a href="insertar.php"><input type="button" value="Continuar insertando"/></a>
             <a href="index.php"><input type="button" value="Volver"/></a><?php
             goto fin;
         } catch (Exception $e) {
@@ -180,9 +192,9 @@
 
     <form action="insertar.php" method="post">
         <label for="codigo">Código:*</label>
-        <input type="text" name="codigo" value="<?= $codigo ?>"><br/>
+        <input type="text" name="codigo" value="<?= $codigo ?>" size="13"><br/>
         <label for="descripcion">Descripción:*</label>
-        <input type="text" name="descripcion" value="<?= $descripcion ?>"><br/>
+        <input type="text" name="descripcion" value="<?= htmlspecialchars($descripcion) ?>" size="50"><br/>
         <label for="precio">Precio:*</label>
         <input type="text" name="precio" value="<?= $precio ?>"><br/>
         <label for="existencias">Existencias:</label>
