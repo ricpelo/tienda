@@ -43,9 +43,25 @@
     $sentido  = (isset($_GET['sentido']))  ? trim($_GET['sentido']) : 'asc';
 
     // Rellena el array de articulos e indexa los $elementos comenzando por $ind_art en un array auxiliar;
-        $numero_articulos = rellenar_array_articulos($filtro);
 
-        $elementos =5;
+        $numero_articulos = (isset($_SESSION['listado_articulos'])) ? count($_SESSION['listado_articulos']) :
+                             rellenar_array_articulos($filtro);
+
+
+        if (isset($_POST['codigo_add'])) {
+          $codigo_art = $_POST['codigo_add'];
+          $_SESSION['listado_articulos'][$codigo_art][2] --;
+          insertar_articulo_pedido($codigo_art);
+        }
+
+        if (isset($_POST['codigo_del'])) {
+          $codigo_art = $_POST['codigo_del'];
+            $_SESSION['listado_articulos'][$codigo_art][2] ++;
+            borrar_articulo_pedido($codigo_art);
+        }
+
+
+        $elementos =8;
 
         // CONTROL DEL PAGINADO
 
@@ -67,20 +83,7 @@
           }
         }
 
-        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, $elementos, true));
-
-    if (isset($_POST['codigo_add'])) {
-      $codigo_art = $_POST['codigo_add'];
-      insertar_articulo_pedido($codigo_art);
-    }
-
-    if (isset($_POST['codigo_del'])) {
-      $codigo_art = $_POST['codigo_del'];
-      borrar_articulo_pedido($codigo_art);
-    }?>
-
-
-
+        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, $elementos, true));?>
 
 
   <div class="principal"><?php
@@ -296,6 +299,10 @@
               <input type="submit" value="Finalizar Pedido" title="Finalizar Pedido" alt="Finalizar Pedido" />
             </form><?php
           }?>
+          <div class="portes">
+            <img src="../images/portes.png" /><br/>
+            * Para pedidos superiores a 50€
+          </div>
       </div>
       <div class="footer_lateral">
         <p class="copyright">

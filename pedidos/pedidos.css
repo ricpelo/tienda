@@ -59,7 +59,7 @@ footer {
   display: block;
   float: left;
   width: 211px;
-  min-height: 255px;
+  min-height: 355px;
   margin: 5px 0px 5px 5px;
   padding: 5px;
   text-align: center;
@@ -72,7 +72,7 @@ footer {
   border: 1px solid #999999;
   border-radius: 5px 5px;
   padding-bottom: 5px;
-  min-height: 255px;
+  min-height: 355px;
   background-color: white;
 }
 
@@ -85,7 +85,7 @@ footer {
 }
 
 .articulos {
-  height: 250px;
+  height: 350px;
 }
 
 .paginador {
@@ -147,6 +147,12 @@ footer {
   text-align: left;
   background-image: url("../images/titulo_icon.png");
   background-repeat: no-repeat;
+}
+
+.portes {
+  margin: 15px 0 0 10px;
+  text-align: center;
+  font-size: 0.6em;
 }
 
 /* FORMATOS HIPERENLACES */

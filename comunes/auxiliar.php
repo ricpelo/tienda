@@ -31,7 +31,6 @@
           if (pg_affected_rows($res) == 1) { 
             $fila = pg_fetch_assoc($res, 0);
             extract($fila);
-            echo $id;
             insertar_lineas_pedido($id);
             $_SESSION['detalle_pedido'] = array(); // Vaciamos el array del pedido.
             $_SESSION['total_pedido'] = 0; // Ponemos a 0 el total del pedido.
@@ -136,18 +135,18 @@
 
 
     function rellenar_array_articulos($filtro) {
-      $_SESSION['listado_articulos'] = array(); // Crea el array para almacenar los artículos
-      $con = conectar();
-      $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%')");
-      if (pg_affected_rows($res) >0) {
-        for ($i=0; $i < pg_affected_rows($res) ; $i++) { 
-          $fila = pg_fetch_assoc($res, $i);
-          extract($fila);
-          if (!isset($_SESSION['listado_articulos'][$codigo])) {
-            $_SESSION['listado_articulos'][$codigo] = array($descripcion, $precio, $existencias);
+        $_SESSION['listado_articulos'] = array(); // Crea el array para almacenar los artículos
+        $con = conectar();
+        $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%')");
+        if (pg_affected_rows($res) >0) {
+          for ($i=0; $i < pg_affected_rows($res) ; $i++) { 
+            $fila = pg_fetch_assoc($res, $i);
+            extract($fila);
+            if (!isset($_SESSION['listado_articulos'][$codigo])) {
+              $_SESSION['listado_articulos'][$codigo] = array($descripcion, $precio, $existencias);
+            }
           }
         }
-      }
       return count($_SESSION['listado_articulos']);
     }
 

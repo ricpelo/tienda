@@ -31,7 +31,7 @@
                 (8479855874523,'Impresora Láser Monocromo Brother HL-2135W WiFi',899.99,1),
                 (8433558547856,'Impresora Multifunción Láser HP LJ Pro MFP M125a',110.00,2),
                 (8438795715422,'Cámara réflex digital Nikon D7100 + DX 18-200 VR',1699.00,2),
-                (8499786675192,'Ibook Sandbook 7" e-ink WIFI-3G 16GB',99.99,2);
+                (8499786675192,'Ibook Sandbook 7" e-ink WIFI-3G 16GB',99.99,2),
                 (4714562857555,'Smartwatch Sony SW2 Active Android Bluetooth',190.00,4),
                 (3888182857575,'iPad mini 2 con pantalla Retina Wi-Fi 16 GB',269.00,1),
                 (8433556822242,'Apple MacBook Air 13,3'' MD760Y/B Intel Core i5',999.00,2),
