@@ -23,9 +23,9 @@
 
 			$con = conectar();
 
-			$res = pg_query($con, "select *
+			$res = pg_query_params($con, "select *
                                from articulos
-                              where id::text = '$id'");
+                              where id::text = $1", array($id));
 
 			if (pg_num_rows($res) < 1)
 			{
@@ -129,19 +129,16 @@
 
       $con = conectar();
 
-      $res = pg_query($con, "select *
+      $res = pg_query_params($con, "select *
                                from articulos
-                               where id::text = '$id'");
+                               where id::text = $1", array($id));
       comprobar_id($id);
       $fila = pg_fetch_assoc($res);
       extract($fila);
-
-      $descripcion = trim(htmlspecialchars($descripcion, ENT_QUOTES));
     }
     elseif (isset($_POST['id']))
     {
       extract($_POST);
-      $descripcion_1 = pg_escape_string($descripcion);
 
       try
       {
@@ -155,12 +152,14 @@
         $con = conectar();
         $res   = pg_query($con, "begin");
         $res   = pg_query($con, "lock table articulos in share mode");
-        $res   = pg_query($con, "update articulos set 
-                                                  codigo       = $codigo, 
-                                                  descripcion  = '{$descripcion_1}', 
-                                                  precio       = $precio,
-                                                  existencias  = $existencias
-                                           where  id::text     = '$id'");
+        $res   = pg_query_params($con, "update articulos set 
+                                                  codigo       = $1,
+                                                  descripcion  = $2, 
+                                                  precio       = $3,
+                                                  existencias  = $4
+						  where id     = $5",
+						  array($codigo, $descripcion,
+						  $precio, $existencias, $id));
 
         comprobar_modificacion($res);?>
         <p>El articulo  <?= $descripcion ?> se ha modificado correctamente.</p><?php
@@ -169,8 +168,10 @@
         foreach ($errores as $error): ?>
           <p>Error: <?= $error ?></p><?php
         endforeach;
-      } finally {
-        $res = pg_query($con, "commit");
+	  } finally {
+			  if (isset($con)) {
+					  $res = pg_query($con, "commit");
+			  }
       }
     }?>
 
@@ -179,15 +180,14 @@
 			<label for="codigo">Código:</label>
       <input type="text" name="codigo" value="<?= $codigo ?>" size="13" /><br/>
       <label for="descripcion">Descripción:</label>
-      <input type="text" name="descripcion" value="<?= $descripcion ?>" size="50"/><br/>
+      <input type="text" name="descripcion" value="<?= htmlspecialchars($descripcion) ?>" size="50"/><br/>
       <label for="precio">Precio:</label>
       <input type="text" name="precio" value="<?= $precio ?>" /><br/>
       <label for="existencias">Existencias:</label>
       <input type="text" name="existencias" value="<?= $existencias ?>" /><br/>
 			<input type="submit" value="Modificar" />
 		</form>
-   <?= volver() ?><?php
+   <?= volver() ?>
 
-		pg_close($con); ?>
 </body>
 </html>
