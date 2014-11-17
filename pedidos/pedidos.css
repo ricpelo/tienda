@@ -59,19 +59,21 @@ footer {
   display: block;
   float: left;
   width: 211px;
+  min-height: 255px;
   margin: 5px 0px 5px 5px;
   padding: 5px;
   text-align: center;
   border: 1px solid #999999;
   border-radius: 5px 5px;
   box-shadow: rgb(150,150,150) 2px 2px 4px;
-  background-color: white;
 }
 
 .contenido_lateral {
-    border: 1px solid #999999;
-    border-radius: 5px 5px;
-    padding-bottom: 5px;
+  border: 1px solid #999999;
+  border-radius: 5px 5px;
+  padding-bottom: 5px;
+  min-height: 255px;
+  background-color: white;
 }
 
 .login {
@@ -80,6 +82,39 @@ footer {
   padding: 10px;
   width: 350px;
   text-align: right;
+}
+
+.articulos {
+  height: 250px;
+}
+
+.paginador {
+  position: relative;
+  width: 700px;
+  height: 32px;
+  margin: 5px;
+}
+
+.paginado_izq, .paginado_der, .paginado_centro{
+  position: absolute;
+  display: inline;
+}
+
+.paginado_centro {
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  width: 200px;
+  height: 32px;
+  display: table;
+  background-image: url("../images/paginado_centro.png");
+}
+.paginado_izq {
+  left: 0px;
+}
+
+.paginado_der {
+  right: 0px;
 }
 
 .leyenda {
@@ -91,12 +126,18 @@ footer {
 
 .carro {
   display:block;
+  position: relative;
   float: left;
   width: 36px;
-  height: 36px;
+  height: 40px;
   margin-left: 10px;
-  background-image: url("../images/finalizar36.png");
-  background-position: left-center;
+}
+
+.carro_form {
+  display:block;
+  float: left;
+  width: 36px;
+  height: 40px;
 }
 
 .icono_encabezado {
@@ -162,6 +203,11 @@ p.footer {
   padding-left: 10px;
 }
 
+.centro {
+  vertical-align: middle;
+  display: table-cell;
+}
+
 .indentado {
   text-indent: 50px;
   text-align: left;
@@ -181,9 +227,12 @@ p.footer {
 }
 
 .leyenda_carro {
+  display: block;
+  position: absolute;
+  right: -3px;
+  top: -2px;
   color: #06c;
-  text-align: right;
-  margin-top: -1px;
+  text-align: left;
   padding-right: 2px;
   font-size: 0.7em;
   font-weight: bolder;
@@ -205,27 +254,11 @@ p.footer {
     background-color: #ddd;
     font-size: 1em;
     font-weight: bold;
-    height: 2em;
+    height: 30px;
   }
 
   tr {
-    height: 2.2em;
-    font-size: 1em;
-  }
-
-  .libre {
-/*    background-color: #64e6ff; */
-    font-size: 0.8em;
-  }
-
-  .ocupado {
-/*    background-color: #fff; */
-    font-size: 0.8em;
-  }
-
-  .reservado_usuario{
-/*    background-color: #e1bc77; */
-    font-size: 0.8em;
+    font-size: 0.9em;
   }
 
   tr:nth-child(even) {
@@ -234,6 +267,10 @@ p.footer {
 
   tr:nth-child(odd) {
     background-color: #eee;
+  }
+
+  td {
+    height: 30px;
   }
 
 
