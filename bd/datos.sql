@@ -5,8 +5,7 @@
 
     insert into roles (descripcion)
                       values ('Administrador'),
-                             ('Registrado'),
-                             ('Invitado');
+                             ('Registrado');
 
 -- USUARIOS --
 
@@ -15,8 +14,7 @@
                                 ('roberto', md5('roberto'), 2),
                                 ('pepe', md5('pepe'), 2),
                                 ('juan', md5('juan'), 2),
-                                ('maria', md5('maria'), 2),
-                                ('Invitado', md5(''), 3);
+                                ('maria', md5('maria'), 2);
 
 
 -- ARTICULOS --
