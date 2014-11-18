@@ -11,6 +11,7 @@
 
   // CREA VARIABLES DE INICIO NECESARIAS
 
+    define ('ELE_PAG', 8);
     // Crea una variable de sesión única para impedir la reinserción de datos.
     if (!isset($_SESSION['id_unica'])) {
       $id_unica = md5(uniqid(rand(), true));
@@ -42,48 +43,45 @@
     $filtro = (isset($_POST['filtro'])) ? trim($_POST['filtro']) : '';
     $sentido  = (isset($_GET['sentido']))  ? trim($_GET['sentido']) : 'asc';
 
-    // Rellena el array de articulos e indexa los $elementos comenzando por $ind_art en un array auxiliar;
+    // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
 
-        $numero_articulos = (isset($_SESSION['listado_articulos'])) ? count($_SESSION['listado_articulos']) :
-                             rellenar_array_articulos($filtro);
-
+        rellenar_array_articulos($filtro);
+        $numero_articulos = total_articulos();
 
         if (isset($_POST['codigo_add'])) {
           $codigo_art = $_POST['codigo_add'];
-          $_SESSION['listado_articulos'][$codigo_art][2] --;
           insertar_articulo_pedido($codigo_art);
         }
 
         if (isset($_POST['codigo_del'])) {
           $codigo_art = $_POST['codigo_del'];
-            $_SESSION['listado_articulos'][$codigo_art][2] ++;
-            borrar_articulo_pedido($codigo_art);
+          borrar_articulo_pedido($codigo_art);
         }
 
 
-        $elementos =8;
+
 
         // CONTROL DEL PAGINADO
 
         $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
 
         if (isset($_POST['pag_atras'])) {
-          if ($ind_art-5 >=0 ){
-            $ind_art -= $elementos;
+          if ($ind_art-ELE_PAG >=0 ){
+            $ind_art -= ELE_PAG;
           } else {
             $ind_art = 0;
           }
         }
 
         if (isset($_POST['pag_adelante'])) {
-          if ($ind_art+5 <=$numero_articulos ){
-            $ind_art += $elementos;
+          if ($ind_art+ELE_PAG <=$numero_articulos ){
+            $ind_art += ELE_PAG;
           } else {
             $ind_art = $ind_art;
           }
         }
 
-        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, $elementos, true));?>
+        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, ELE_PAG, true));?>
 
 
   <div class="principal"><?php
@@ -178,11 +176,13 @@
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_add" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                      <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/insertar24.png" title="Añadir" alt="Añadir" />
                     </form>
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                      <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
                     </form>
                   </td>
@@ -200,7 +200,7 @@
             </form>
             <div class="paginado_centro subtitulo">
               <div class="centro">
-                <?= $ind_art+1 ?>-<?= (($ind_art+5 > $numero_articulos) ? $numero_articulos : $ind_art+5) ?> de <?= $numero_articulos ?> artículos
+                <?= $ind_art+1 ?>-<?= (($ind_art+ELE_PAG > $numero_articulos) ? $numero_articulos : $ind_art+ELE_PAG) ?> de <?= $numero_articulos ?> artículos
               </div>
             </div>
             <form class="paginado_der" action="insertar.php" method="POST">
@@ -270,21 +270,26 @@
     </section>
     <aside class="bloque_derecho">
       <div class="contenido_lateral">
-        <h3 class="icono_encabezado titulo">
+        <h3 class="icono_encabezado titulo2">
           Filtro artículos
         </h3>
         <form action="insertar.php" method="POST">
           <input class="filtrar" type="text" name="filtro" placeholder="Búsqueda para filtro" />
           <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
         </form>
-        <h3 class="icono_encabezado titulo">
+        <h3 class="icono_encabezado titulo2">
           Resumen Pedido
-        </h3>
+        </h3><?php
+        if (cuenta_unidades() >0 ) {
+          $carro = "../images/finalizar36.png";
+        } else {
+          $carro = "../images/finalizar_vacia.png";
+        }?>
         <div class="carro">
           <form class="carro_form" action="insertar.php" method="POST">
             <input type="hidden" name="ver_carro" value ="" />
             <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-            <input type="image" src="../images/finalizar36.png" title="Volver" alt="Volver" />
+            <input type="image" src="<?= $carro ?>" title="Ver Cesta" alt="Ver Cesta" />
           </form>          
           <div class="leyenda_carro">
             <?= cuenta_unidades() ?>
@@ -293,11 +298,20 @@
         </div><?php
           if (count($_SESSION['detalle_pedido']) >0 ) {?> 
             <p><u>TOTAL PEDIDO</u> <br/><?= number_format($_SESSION['total_pedido'], 2, ',', '.') ?> €</p>
-            <form style="display:inline" action="insertar.php" method="POST">
-              <input type="hidden" name="pedido_fin" value ="" />
-              <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-              <input type="submit" value="Finalizar Pedido" title="Finalizar Pedido" alt="Finalizar Pedido" />
-            </form><?php
+            <div class="carro">
+              <form class="carro_form" action="insertar.php" method="POST">
+                <input type="hidden" name="vaciar_carro" value ="" />
+                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                <input type="image" src="../images/vaciar_carro.png" title="Vaciar Cesta" alt="Vaciar Cesta" />
+              </form>
+            </div>
+            <div class="finalizar_pedido">
+              <form style="display:inline" action="insertar.php" method="POST">
+                <input type="hidden" name="pedido_fin" value ="" />
+                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                <input type="submit" value="Finalizar Pedido" title="Finalizar Pedido" alt="Finalizar Pedido" />
+              </form>
+            </div><?php
           }?>
           <div class="portes">
             <img src="../images/portes.png" /><br/>

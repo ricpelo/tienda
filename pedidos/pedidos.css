@@ -140,6 +140,12 @@ footer {
   height: 40px;
 }
 
+.finalizar_pedido {
+  display:block;
+  padding: 5px 0 0 20px;
+  float: left;
+}
+
 .icono_encabezado {
   width: 190px;
   height: 24px;
@@ -171,13 +177,13 @@ footer {
 .titulo2 {
   text-align: center;
   color: #06c;
-  font: bold 18px verdana, sans-serif;
+  font: bold 16px verdana, sans-serif;
 }
 
 .subtitulo {
   text-align: center;
   color: #06c;
-  font: bold 15px verdana, sans-serif;
+  font: 14px verdana, sans-serif;
 }
 
 p {

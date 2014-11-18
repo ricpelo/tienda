@@ -78,8 +78,11 @@
 
     function insertar_articulo_pedido($codigo_art) {
 
-      if ($_POST['id_unica'] == $_SESSION['id_unica']) {      
+      if ($_POST['id_unica'] == $_SESSION['id_unica'] && tiene_stock($codigo_art)) {      
         $codigo_art = (float)($codigo_art);
+
+        actualiza_stock($codigo_art, 1);
+        $_SESSION['listado_articulos'][$codigo_art][2] --;
 
         $con = conectar();
         $res = pg_query($con, "select descripcion, precio from articulos where codigo = $codigo_art");
@@ -103,6 +106,10 @@
       if ($_POST['id_unica'] == $_SESSION['id_unica']) {
         $codigo_art = (float)($codigo_art);
 
+        actualiza_stock($codigo_art, -1);
+        $_SESSION['listado_articulos'][$codigo_art][2] ++;
+
+
         $con = conectar();
         $res = pg_query($con, "select precio from articulos where codigo = $codigo_art");
         if (pg_affected_rows($res) == 1) {
@@ -125,7 +132,33 @@
       }
     }
 
-    function cuenta_unidades() {
+    function tiene_stock($codigo_art) {
+
+      $codigo_art = (float)($codigo_art);
+      $retorno = false;
+
+      $con = conectar();
+      $res = pg_query($con, "select existencias from articulos where codigo = $codigo_art");
+      if (pg_affected_rows($res) == 1) {
+        $fila = pg_fetch_assoc($res, 0);
+        extract($fila);
+        if ($existencias > 0 ) {
+          $retorno =  true;
+        }
+      }
+      return $retorno;
+    }
+
+    function actualiza_stock($codigo_art, $cantidad) {
+
+      $codigo_art = (float)($codigo_art);
+
+      $con = conectar();
+      $res = pg_query($con, "update articulos SET existencias = existencias-($cantidad) where codigo = $codigo_art");
+
+    }
+
+   function cuenta_unidades() {
         $unidades = 0;
         foreach ($_SESSION['detalle_pedido'] as $k => $v) {
           $unidades += $v[2];
@@ -133,11 +166,14 @@
         return $unidades;  
     }
 
+    function total_articulos() {
+      return count($_SESSION['listado_articulos']);
+    }
 
     function rellenar_array_articulos($filtro) {
         $_SESSION['listado_articulos'] = array(); // Crea el array para almacenar los artículos
         $con = conectar();
-        $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%')");
+        $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%') order by descripcion");
         if (pg_affected_rows($res) >0) {
           for ($i=0; $i < pg_affected_rows($res) ; $i++) { 
             $fila = pg_fetch_assoc($res, $i);
@@ -147,7 +183,6 @@
             }
           }
         }
-      return count($_SESSION['listado_articulos']);
     }
 
   // FIN   FUNCIONES AUXILIARES PARA INSERCION PEDIDOS
