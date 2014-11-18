@@ -1,9 +1,0 @@
-<?php
-
-  function conectar()
-  {
-   return pg_connect("host=localhost user=dani password=dani
-                       dbname=tienda");
-                       
-                       
-  }
