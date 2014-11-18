@@ -34,9 +34,9 @@
     function pintar_articulo($id){
       global $con;
         
-      $res = pg_query($con, "select * 
+      $res = pg_query_params($con, "select * 
                                from articulos
-                              where id::text = '$id'");
+                              where id = $1", [$id]);
 
       $fila = pg_fetch_assoc($res); ?>
         
@@ -88,9 +88,9 @@
       if(isset($_GET['id'])){
         $id = trim($_GET['id']);  
 
-        $res = pg_query($con, "select * 
+        $res = pg_query_params($con, "select * 
                                  from articulos
-                                where id::text = '$id'");
+                                where id = $1", [$id]);
 
         if(pg_num_rows($res) == 1)
           return $id;
@@ -106,21 +106,21 @@
       global $con;
       global $errores;
 
-      $res = pg_query($con, "delete from articulos
-                              where id::text = '$id'");
+      $res = pg_query_params($con, "delete from articulos
+                              where id = $1", [$id]);
     }
 
     try{
       comprobar_usuario();
       $res = pg_query($con, "begin");
-      $res = pg_query($con, "lock table tienda in share mode");
+      $res = pg_query($con, "lock table articulos in share mode");
 
       if(isset($_POST['id'])){
         borrar_articulo($_POST['id']); 
         header("Location: index.php");
       }else{
         pintar_articulo(obtener_articulo()); ?>
-        <a href="index.php"><button>Volver</button></a> <?php
+        <a href="index.php"><button>Cancelar</button></a> <?php
       }
     }catch(Exception $e){
       foreach ($errores as $v) { ?>
@@ -128,7 +128,7 @@
       } ?>
       <a href="index.php"><button>Volver</button></a> <?php
 
-    }finally {
+    }finally{
       $res = pg_query($con, "commit");
       pg_close($con);
     }
