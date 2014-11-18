@@ -96,7 +96,7 @@
             <table>
               <thead>
                 <tr>
-                  <th colspan="6" class="titulo2">
+                  <th colspan="5" class="titulo2">
                     Pedido Nº: <?= $numero ?> guardado.
                   </th>
                 </tr>
@@ -104,10 +104,8 @@
                   <th width="18%">Código</th>
                   <th width="50%">Descripción</th>
                   <th width="11%">Precio</th>
-                  <th width="6%">Cant.</th>
+                  <th width="6%">Ud.</th>
                   <th width="12%">Subtotal</th>
-                  <th width="7%">Acción</th>
-
                   </th>
                 </tr>
               </thead>
@@ -120,13 +118,6 @@
                   <td class="derecha"><?= $v[2] ?></td><?php
                   $total_linea = $v[1]*$v[2];?>
                   <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
-                  <td>
-                    <form style="display:inline" action="insertar.php" method="POST">
-                      <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
-                      <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                      <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
-                    </form>
-                  </td>
                 </tr><?php
               }?>
               </tbody>
@@ -196,6 +187,7 @@
               <input type="hidden" name="pag_atras" value ="" />
               <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
               <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+              <input type="hidden" name="filtro" value="<?= $filtro ?>" />
               <input type="image" src="../images/left_arrow.png" title="Pág. Anterior" alt="Pág. Anterior" />
             </form>
             <div class="paginado_centro subtitulo">
@@ -206,6 +198,7 @@
             <form class="paginado_der" action="insertar.php" method="POST">
               <input type="hidden" name="pag_adelante" value ="" />
               <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+              <input type="hidden" name="filtro" value="<?= $filtro ?>" />
               <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
               <input type="image" src="../images/right_arrow.png" title="Pág. Siguiente" alt="Pág. Siguiente" />
             </form>
@@ -225,7 +218,7 @@
                   <th width="18%">Código</th>
                   <th width="50%">Descripción</th>
                   <th width="11%">Precio</th>
-                  <th width="6%">Cant.</th>
+                  <th width="6%">Ud.</th>
                   <th width="12%">Subtotal</th>
                   <th width="7%">Acción</th>
 

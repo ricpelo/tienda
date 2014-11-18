@@ -103,7 +103,7 @@
 
     function borrar_articulo_pedido($codigo_art) {
 
-      if ($_POST['id_unica'] == $_SESSION['id_unica']) {
+      if ($_POST['id_unica'] == $_SESSION['id_unica'] && isset($_SESSION['detalle_pedido'][$codigo_art])) {
         $codigo_art = (float)($codigo_art);
 
         actualiza_stock($codigo_art, -1);
