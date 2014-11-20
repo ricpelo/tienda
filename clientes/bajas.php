@@ -6,7 +6,7 @@
     <title>Borrar Clientes</title>
   </head>
   <body>
-  <?php
+  <p><?= $id = 4?></p><?php
 
 
   $_SESSION['usuario'] = 1;
@@ -84,7 +84,7 @@
             endfor; ?>
           </tbody>
         </table>
-        <form action="bajas.php" method="post">
+        <form action="bajas.php" method="get">
           <input type="hidden" name="id" value="<?= $fila['id'] ?>">
           <p>¿Desea eliminar el usuario?</p>
           <input type="submit" value="Eliminar">
