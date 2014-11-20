@@ -6,21 +6,21 @@
     <title>Borrar Usuarios</title>
   </head>
   <body>
-  <p><?= $nick = 'pepe';?><p><?php
+  <p><?= $id = '1';?><p><?php
   	
-  if (isset($_SESSION['nick']))
+  if (isset($_SESSION['id']))
   {
-  	$nick = trim($_POST['nick']);
+  	$id = trim($_POST['id']);
   }
 
-  function comprobar_existe($nick, $con){
-  	$res = pg_query($con,"select nick
+  function comprobar_existe($id, $con){
+  	$res = pg_query($con,"select id
   		                  	from usuarios
-  		                  where nick = '$nick'");
+  		                  where id = '$id'");
 
   	if (pg_num_rows($res) != 1)
   	{ 
-    	throw new Exception("El usuario con el nick $nick no existe"); 
+    	throw new Exception("El usuario con el id $id no existe"); 
   	} 
   }
 
@@ -31,10 +31,10 @@
   	}
   }
 
-  function pintar_usuarios($nick,$con){
+  function pintar_usuarios($id,$con){
   	$res = pg_query($con,"select * 
   		  					from usuarios
-  		  				  where nick = '$nick'");
+  		  				  where id = '$id'");
 
   	$cols = array('nick' => 'Nick',
   		          'password' => 'Contraseña',
@@ -58,7 +58,7 @@
           </tbody>
         </table>
         <form action="bajas.php" method="post">
-          <input type="hidden" name="codigo" value="<?= $fila['codigo'] ?>">
+          <input type="hidden" name="id" value="<?= $fila['id'] ?>">
           <p>¿Desea eliminar el artículo?</p>
           <input type="submit" value="Eliminar">
           <a href="index.php"><input type="button" value="Volver"></a>
@@ -66,9 +66,9 @@
     </table><?php
   }
 
-  if (isset($_POST['nick']))
+  if (isset($_POST['id']))
   {
-  	$nick = trim($_POST['nick']);
+  	$nick = trim($_POST['id']);
   }
 
   require '../comunes/auxiliar.php';
@@ -79,11 +79,11 @@
 
   try
   {
-  	comprobar_existe($nick,$con);
-  	pintar_usuarios($nick,$con);
-  	if(isset($_POST['codigo'])){
+  	comprobar_existe($id,$con);
+  	pintar_usuarios($id,$con);
+  	if(isset($_POST['id'])){
   		$res = pg_query($con,"delete from usuarios
-  		                  where nick = '$nick'");
+  		                  where id = '$id'");
   		comprobar_borrado($res); ?>
   		<p>El cliente se ha borrado correctamente</p><?php
   		header("Location: index.php");
