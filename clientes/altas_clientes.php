@@ -11,7 +11,11 @@
 	//creamos el array que contendá los errores
 	$errores = array();
 	//definimos las variables por si no lo hemos cojido con $_POST
-	$dni=(isset($_POST['dni']) ? trim($_POST['dni']) : "");
+	//$dni=(isset($_POST['dni']) ? trim($_POST['dni']) : "");
+
+	//definimos las variables si bienen por GET (del index clientes)
+	$usuario_id=(isset($_GET['id'])) ? trim($_GET['id']) : "";
+	
 	
 	//funcion que comprueba si hay mensages en $errores y lanza una excepcion
 	function comprobar_errores(){
@@ -93,7 +97,7 @@
 	}
 	//aqui empieza el programa php
 	//comprueba si se han mandado los valores del formulario por post, es decir, si venimos del submit
-	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['usuario_id']) && isset($_POST['codigopostal'])) {
+	if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['dni']) && isset($_POST['codigo']) && isset($_POST['codigopostal'])) {
 		$codigo=trim($_POST['codigo']);
 		$nombre=trim($_POST['nombre']);
 		$apellidos=trim($_POST['apellidos']);
@@ -101,7 +105,10 @@
 		$direccion=trim($_POST['direccion']);
 		$poblacion=trim($_POST['poblacion']);
 		$codigopostal=trim($_POST['codigopostal']);
-		$usuario_id=trim($_POST['usuario_id']);
+		
+		if ($usuario_id!="") {
+			$usuario_id=trim($_POST['usuario_id']);
+		}
 		try {
 
 			//comprobamos el codigo
@@ -170,18 +177,26 @@
 		<input type="text" name="poblacion" value="chipiona"><br>
 		<label for="codigopostal">Código postal *: </label>
 		<input type="text" name="codigopostal"><br>
-
-		<select name="usuario_id" ><?php 
-			for($i=0; $i< pg_num_rows($res); $i++){
-				$fila=pg_fetch_assoc($res, $i);
+		<?php
+			if (isset($_GET['id'])) {
+				echo("ID de Usuario: ".$_GET['id']);
+			}else
+			{
 				?>
-				<option value="<?= $fila['id'] ?>">
-					<?= $fila['nick']?>
-				</option>
+				<select name="usuario_id" ><?php 
+				for($i=0; $i< pg_num_rows($res); $i++){
+					$fila=pg_fetch_assoc($res, $i);
+					?>
+					<option value="<?= $fila['id'] ?>">
+						<?= $fila['nick']?>
+					</option>
+					<?php
+				}pg_close($con);
+				?>
+			</select>
 				<?php
-			}pg_close($con);
-			?>
-		</select>
+			}
+		?>
 
 		<input type="submit" value="Insertar">
 

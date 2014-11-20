@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<?php
-			require '..comunes/auxiliar.php';
+			require '../comunes/auxiliar.php';
 
 			$con=conectar();
 			$res=pg_query($con, 'select * from clientes');
@@ -17,11 +17,13 @@
 			<table border="1">
 				<caption>CLIENTES</caption>
 				<thead>
+					<tr>
 					<?php
 					foreach ($cols as $col) {
-						?><tr><?= $col ?></tr><?php
+						?><td><?= $col ?></td><?php
 					}
 					?>
+					</tr>
 				</thead>
 				<tbody>
 					<?php
@@ -36,6 +38,20 @@
 								<?php
 							}
 							?>
+							 <td>
+	                        <form action="modificar.php" method="get">
+	                            <input type="hidden" name="id" 
+	                                  value="<?=$fila['id']?>">
+	                            <input type="submit" value="Modificar">
+	                        </form>
+	                    </td>
+	                    <td>
+	                        <form action="bajas.php" method="get">
+	                            <input type="hidden" name="id" 
+	                                  value="<?=$fila['id']?>">
+	                            <input type="submit" value="Borrar">
+	                        </form>
+	                    </td>
 						</tr>
 						<?php
 					}
@@ -43,7 +59,54 @@
 				</tbody>
 			</table>
 			<?php
-		?>
+			pg_close($con);
+
+			//comienzo de la tabla usuarios
+			$con=conectar();
+			$res=pg_query($con, 'select * from usuarios');
+			$cols=array_keys(pg_fetch_assoc($res, 0));
+
+			?>
+			<table border="1">
+				<caption>USUARIOS</caption>
+				<thead>
+					<tr>
+					<?php
+					foreach ($cols as $col) {
+						?><td><?= $col ?></td><?php
+					}
+					?>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					for ($i=0; $i < pg_num_rows($res); $i++) { 
+						$fila=pg_fetch_assoc($res ,$i);
+						?>
+						<tr>
+							<?php
+							foreach ($cols as $col) {
+								?>
+								<td><?= $fila[$col]?></td>
+								<?php
+							}
+							?>
+							 <td>
+	                        <form action="altas_clientes.php" method="get">
+	                            <input type="hidden" name="id" 
+	                                  value="<?=$fila['id']?>">
+	                            <input type="submit" value="Dar de alta como Cliente">
+	                        </form>
+	                    </td>
+	                    
+						</tr>
+						<?php
+					}
+					?>
+				</tbody>
+			</table>
+		
+
 
 	<?php
 
