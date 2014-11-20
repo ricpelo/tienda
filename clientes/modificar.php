@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -11,7 +12,7 @@
 
 		
 		$errores = array();
-		$id = 1;
+		//$id = 1;
 
 		/* FUNCIONES */
 		
@@ -209,24 +210,7 @@
 		}
 
 
-
-
-
-
-
-
 	/* ------------------------------------------- */
-
-
-
-
-
-
-	
-
-
-
-	
 
 
 
@@ -298,20 +282,7 @@
 
 
 
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
 
 
 
@@ -337,9 +308,9 @@
 
 
 
-		else if (isset($id))
+		else if ($_GET['id'])
 		{
-			$clientes_id = trim($id);
+			$clientes_id = trim($_GET['id']);
 			$con = conectar();
 			$res = pg_query($con, "select * from clientes
                                		  where id::text = '$clientes_id'");
