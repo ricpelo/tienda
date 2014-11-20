@@ -6,7 +6,7 @@
     <title>Borrar Usuarios</title>
   </head>
   <body>
-  <p><?= $id = '1';?><p><?php
+  <p><?= $id = '2';?><p><?php
   	
   if (isset($_SESSION['id']))
   {
@@ -59,7 +59,7 @@
         </table>
         <form action="bajas.php" method="post">
           <input type="hidden" name="id" value="<?= $fila['id'] ?>">
-          <p>¿Desea eliminar el artículo?</p>
+          <p>¿Desea eliminar el usuario?</p>
           <input type="submit" value="Eliminar">
           <a href="index.php"><input type="button" value="Volver"></a>
         </form>
@@ -68,7 +68,7 @@
 
   if (isset($_POST['id']))
   {
-  	$nick = trim($_POST['id']);
+  	$id = trim($_POST['id']);
   }
 
   require '../comunes/auxiliar.php';

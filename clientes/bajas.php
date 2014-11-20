@@ -86,7 +86,7 @@
         </table>
         <form action="bajas.php" method="post">
           <input type="hidden" name="id" value="<?= $fila['id'] ?>">
-          <p>¿Desea eliminar el artículo?</p>
+          <p>¿Desea eliminar el usuario?</p>
           <input type="submit" value="Eliminar">
           <a href="index.php"><input type="button" value="Volver"></a>
         </form>
