@@ -6,7 +6,7 @@
     <title>Borrar Clientes</title>
   </head>
   <body>
-  <p><?= $id = 2?></p><?php
+  <p><?= $id = 4?></p><?php
 
 
   $_SESSION['usuario'] = 1;
@@ -18,8 +18,8 @@
 
   function obtener_cliente($con){
 
-      if(isset($_POST['id'])){
-        $id = trim($_POST['id']);  
+      if(isset($_GET['id'])){
+        $id = trim($_GET['id']);  
 
         $res = pg_query_params($con, "select * 
                                  from clientes
@@ -84,7 +84,7 @@
             endfor; ?>
           </tbody>
         </table>
-        <form action="bajas.php" method="post">
+        <form action="bajas.php" method="get">
           <input type="hidden" name="id" value="<?= $fila['id'] ?>">
           <p>¿Desea eliminar el usuario?</p>
           <input type="submit" value="Eliminar">
@@ -93,24 +93,24 @@
     </table><?php
   }
 
-  if (isset($_POST['codigo']))
-  {
-  	$codigo = trim($_POST['codigo']);
-  }
-
   require '../comunes/auxiliar.php';
 
   $con = conectar();
   $res = pg_query($con,"begin");
   $res = pg_query($con, "lock table clientes in share mode");
 
+  if (isset($_GET['id']))
+  {
+  	$id = trim($_GET['id']);
+  }
+
   try
   {
   	comprobar_existe($id,$con);
     pintar_cliente($id,$con);
-    if(isset($_POST['id'])){
+    if(isset($_GET['id'])){
         $res = pg_query($con,"delete from clientes 
-                        where id= $id");
+                        where id = $id");
         comprobar_borrado($res); ?>
         <p>El cliente se ha borrado correctamente</p><?php
         header("Location: index.php");
