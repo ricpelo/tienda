@@ -6,7 +6,7 @@
     <title>Tienda</title>
   </head>
   <body><?php
-     require '../comunes/auxiliar.php';
+     require 'comunes/auxiliar.php';
 
     $con = conectar();
     $errores = [];
@@ -15,7 +15,7 @@
 
     function comprobar_usuario(){
       if (!isset($_SESSION['usuario']))
-        header("Location: ../usuarios/login.php"); 
+        header("Location: usuarios/login.php"); 
     }
 
     function comprobar_admin(){
