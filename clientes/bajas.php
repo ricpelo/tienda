@@ -6,21 +6,41 @@
     <title>Borrar Clientes</title>
   </head>
   <body>
-  <p><?= $codigo = 110001;?><p><?php
+  <p><?= $id = 2?></p><?php
 
-  if (isset($_SESSION['codigo']))
-  {
-  	$codigo = trim($_POST['codigo']);
+
+  $_SESSION['usuario'] = 1;
+
+  function comprobar_usuario(){
+      if (!isset($_SESSION['usuario']))
+        header("Location: ../usuarios/login.php"); 
   }
 
-  function comprobar_existe($codigo, $con){
-  	$res = pg_query($con,"select codigo
+  function obtener_cliente($con){
+
+      if(isset($_POST['id'])){
+        $id = trim($_POST['id']);  
+
+        $res = pg_query_params($con, "select * 
+                                 from clientes
+                                where id = $1", [$id]);
+
+        if(pg_num_rows($res) == 1)
+          return $id;
+        else
+          throw new Exception("El cliente no existe");
+      
+      }
+  }
+
+  function comprobar_existe($id, $con){
+  	$res = pg_query($con,"select id
   		                  	from clientes
-  		                  where codigo::text = '$codigo'");
+  		                  where id::text = '$id'");
 
   	if (pg_num_rows($res) != 1)
   	{ 
-    	throw new Exception("El cliente con el codigo $codigo no existe"); 
+    	throw new Exception("El cliente con el codigo $id no existe"); 
   	} 
   }
 
@@ -31,10 +51,10 @@
   	}
   }
 
-  function pintar_cliente($codigo,$con){
+  function pintar_cliente($id,$con){
     $res = pg_query($con,"select * 
                             from clientes
-                          where codigo::text = '$codigo'"); 
+                          where id::text = '$id'"); 
 
     $fila = pg_fetch_assoc($res); 
 
@@ -65,7 +85,7 @@
           </tbody>
         </table>
         <form action="bajas.php" method="post">
-          <input type="hidden" name="codigo" value="<?= $fila['codigo'] ?>">
+          <input type="hidden" name="id" value="<?= $fila['id'] ?>">
           <p>¿Desea eliminar el artículo?</p>
           <input type="submit" value="Eliminar">
           <a href="index.php"><input type="button" value="Volver"></a>
@@ -86,11 +106,11 @@
 
   try
   {
-  	comprobar_existe($codigo,$con);
-    pintar_cliente($codigo,$con);
-    if(isset($_POST['codigo'])){
+  	comprobar_existe($id,$con);
+    pintar_cliente($id,$con);
+    if(isset($_POST['id'])){
         $res = pg_query($con,"delete from clientes 
-                        where codigo = $codigo");
+                        where id= $id");
         comprobar_borrado($res); ?>
         <p>El cliente se ha borrado correctamente</p><?php
         header("Location: index.php");
