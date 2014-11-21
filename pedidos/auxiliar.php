@@ -41,6 +41,16 @@
       }
     }
 
+    function vaciar_carro() {
+      if ($_POST['id_unica'] == $_SESSION['id_unica']) {
+        foreach ($_SESSION['detalle_pedido'] as $k => $v) {
+          actualiza_stock($k, -($v[2])); // Restituimos las existencias de cada artículo
+        }
+            $_SESSION['detalle_pedido'] = array(); // Vaciamos el array del pedido.
+            $_SESSION['total_pedido'] = 0; // Ponemos a 0 el total del pedido.
+      }
+    }
+
     function insertar_lineas_pedido($id) {
       $con = conectar();
 
@@ -149,6 +159,7 @@
       $res = pg_query($con, "update articulos SET existencias = existencias-($cantidad) where codigo = $codigo_art");
 
     }
+
 
    function cuenta_unidades() {
         $unidades = 0;

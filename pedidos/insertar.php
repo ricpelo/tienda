@@ -8,6 +8,7 @@
   </head>
   <body><?php
     require '../comunes/auxiliar.php';
+    require 'auxiliar.php';
 
   // CREA VARIABLES DE INICIO NECESARIAS
 
@@ -45,6 +46,10 @@
     $stock_flag = (isset($_POST['stock_flag'])) ? trim($_POST['stock_flag']) : false;
 
     // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
+
+        if (isset($_POST['vaciar_carro'])) {
+          vaciar_carro();
+        }
 
         rellenar_array_articulos($filtro, "descripcion", $stock_flag); // El segundo parámetro  define el orden.
         $numero_articulos = total_articulos();
@@ -300,7 +305,7 @@
           $carro = "../images/finalizar_vacia.png";
         }?>
         <div class="carro">
-          <form class="carro_form" action="insertar.php" method="POST">
+          <form class="carro_form" action="vercarro.php" method="POST">
             <input type="hidden" name="ver_carro" value ="" />
             <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
             <input type="image" src="<?= $carro ?>" title="Ver Cesta" alt="Ver Cesta" />
@@ -313,7 +318,7 @@
           if (count($_SESSION['detalle_pedido']) >0 ) {?> 
             <p><u>TOTAL PEDIDO</u> <br/><?= number_format($_SESSION['total_pedido'], 2, ',', '.') ?> €</p>
             <div class="carro">
-              <form class="carro_form" action="insertar.php" method="POST">
+              <form class="carro_form" action="vercarro.php" method="POST">
                 <input type="hidden" name="vaciar_carro" value ="" />
                 <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
                 <input type="image" src="../images/vaciar_carro.png" title="Vaciar Cesta" alt="Vaciar Cesta" />
