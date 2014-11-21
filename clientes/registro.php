@@ -11,7 +11,7 @@
     $con = conectar();
     $errores = [];
 
-    $_SESSION['usuario'] = 9;
+    $_SESSION['usuario'] = 1;
 
     function comprobar_usuario(){
       if (!isset($_SESSION['usuario']))
@@ -50,11 +50,8 @@
       if (pg_num_rows($res) == 1){
         $fila = pg_fetch_assoc($res);
 
-        if($fila['rol_id'] != 1){
-          $errores[] = "Error: Usuario sin permisos.";
-
-          comprobar_errores();
-        }
+        return ($fila['rol_id'] != 1) ? FALSE : TRUE;
+       
       }
     }
 
@@ -111,31 +108,44 @@
     }
 
     function form_nuevo_usuario(){ 
-      global $con; ?>
 
+    	
+      global $con; ?>
+		
+
+		
       <h2>Insertar cliente</h2>
       <h3>Datos Personales</h3>
       <form action="registro.php" method="post">
         <label for="codigo">Codigo :</label>
-        <input type="text" name="codigo"><br>
+        <input type="text" name="codigo" value="<?= (isset($_POST['codigo'])) ? $_POST['codigo'] : '' ?>"><br>
         <label for="nombre">Nombre : </label>
-        <input type="text" name="nombre" value="pepito"><br>
+        <input type="text" name="nombre" value="<?= (isset($_POST['nombre'])) ? $_POST['nombre'] : '' ?>" ><br>
         <label for="apellidos">Apellidos : </label>
-        <input type="text" name="apellidos" value="perez"><br>
+        <input type="text" name="apellidos" value="<?= (isset($_POST['apellidos'])) ? $_POST['apellidos'] : '' ?>"><br>
         <label for="dni">DNI :</label>
-        <input type="text" name="dni" value=""><br>
+        <input type="text" name="dni" value="<?= (isset($_POST['dni'])) ? $_POST['dni'] : '' ?>"><br>
         <label for="direccion" >Dirección: </label>
-        <input type="text" name="direccion" value="mi casa"><br>
+        <input type="text" name="direccion" value="<?= (isset($_POST['direccion'])) ? $_POST['direccion'] : '' ?>"><br>
         <label for="poblacion">Población: </label>
-        <input type="text" name="poblacion" value="chipiona"><br>
+        <input type="text" name="poblacion" value="<?= (isset($_POST['poblacion'])) ? $_POST['poblacion'] : '' ?>"><br>
         <label for="codigopostal">Código postal : </label>
-        <input type="text" name="codigopostal"><br>   
+        <input type="text" name="codigopostal" value="<?= (isset($_POST['codigopostal'])) ? $_POST['codigopostal'] : '' ?>"><br>   
         <h3>Datos de Usuario</h3>     
         <label for="nick">Nick</label>
-        <input type="text" name="nick"> <br />
+        <input type="text" value="<?= (isset($_POST['nick'])) ? $_POST['nick'] : '' ?>" name ="nick"> <br />
         <label for="pass">Contraseña</label>
-        <input type="password" name="password"> <br />
-        <input type="hidden" name="rol" value="1">
+        <input type="password" name="password"> <br /> <?php
+        	if (comprobar_admin()){
+        		?>
+        		<input type="radio" name="rol" value="1" >Administrador <br>
+        		<input type="radio" name="rol" value="2" checked="checked">Cliente<br>
+        		<?php
+        	}else{
+        		?><input type="hidden" name="rol" value="2"><?php
+        	}
+        	?>
+        
         <input type="submit" value="Alta">        
       </form>
 
@@ -150,7 +160,7 @@
     function comprobar_restricciones(){
       global $errores;
 
-      if(!(strlen($_POST['nick']) <= 15))
+      if(!(strlen($_POST['nick']) <= 15) || (strlen($_POST['nick']) == 0))
         $errores[] = "Error: Nick debe ser inferior o igual a 15 caracteres";
 
       if(strlen($_POST['password']) == 0){
@@ -231,9 +241,10 @@
     try{
       if(!isset($_POST['nick'])){
         comprobar_usuario();
-        form_nuevo_usuario();
+        
       }else{
         limpiar_datos();
+
         comprobar_restricciones();
         comprobar_codigo();
         comprobar_dni();
@@ -247,13 +258,13 @@
     }catch(Exception $e){
       foreach ($errores as $v) { ?>
         <p><?= $v ?></p> <?php
-      } ?>
-      
-      <a href="registro.php"><button>Volver</button></a> <?php
+      } 
 
     }finally {
+    	form_nuevo_usuario();
       $res = pg_query($con, "commit");
       pg_close($con);
+
     } ?>
   </body>
 </html>
