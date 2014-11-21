@@ -156,9 +156,15 @@ footer {
 }
 
 .portes {
-  margin: 15px 0 0 10px;
+  clear:both;
+  margin: 0 auto;
   text-align: center;
   font-size: 0.6em;
+}
+
+.img_portes {
+  text-align: center;
+  width: 150px;
 }
 
 /* FORMATOS HIPERENLACES */
@@ -330,6 +336,18 @@ img.user {
   text-align: center;
 }
 
+.stock {
+  float: right;
+  display: inline;
+  text-align: left;
+  vertical-align: middle;
+  padding: 0 3px;
+}
+
+.leye_stock {
+  font-size: 0.8em;
+}
+
 label {
   float: left;
   width: 120px;
@@ -340,6 +358,8 @@ label {
 input.filtrar {
   width: 170px;
   height: 30px;
+  margin-top: -15px;
+  margin-bottom: 5px;
   padding: 0 0 0 25px;
   text-align: left;
   font: normal bold 20px  arial, sans-serif;

@@ -42,10 +42,11 @@
 
     $filtro = (isset($_POST['filtro'])) ? trim($_POST['filtro']) : '';
     $sentido  = (isset($_GET['sentido']))  ? trim($_GET['sentido']) : 'asc';
+    $stock_flag = (isset($_POST['stock_flag'])) ? trim($_POST['stock_flag']) : false;
 
     // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
 
-        rellenar_array_articulos($filtro);
+        rellenar_array_articulos($filtro, "descripcion", $stock_flag); // El segundo parámetro  define el orden.
         $numero_articulos = total_articulos();
 
         if (isset($_POST['codigo_add'])) {
@@ -167,12 +168,14 @@
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_add" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                      <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
                       <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/insertar24.png" title="Añadir" alt="Añadir" />
                     </form>
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                      <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
                       <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
                     </form>
@@ -269,7 +272,25 @@
         <form action="insertar.php" method="POST">
           <input class="filtrar" type="text" name="filtro" placeholder="Búsqueda para filtro" />
           <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+        </form><?php
+        $stock_flag = ($stock_flag) ? false : true;
+        if ($stock_flag) {
+          $img_stock = "check.png";
+          $img_stock_over = "check_over.png";
+        } else {
+          $img_stock = "checked.png";
+          $img_stock_over = "checked_over.png";
+        }?>
+        <form class="stock" action="insertar.php" method="POST">
+          <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+          <input type="hidden" name="stock_flag" value ="<?= $stock_flag ?>" />
+          <input type="hidden" name="filtro" value="<?= $filtro ?>" />
+          <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+          <span class="leye_stock">Sólo Artículos en stock</span>
+          <input class="stock" type="image" src="../images/<?= $img_stock ?>" title="Sólo Stock" alt="Sólo Stock" />
+          
         </form>
+        <br/>        
         <h3 class="icono_encabezado titulo2">
           Resumen Pedido
         </h3><?php
@@ -304,18 +325,17 @@
                 <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
                 <input type="submit" value="Finalizar Pedido" title="Finalizar Pedido" alt="Finalizar Pedido" />
               </form>
+            </div>
+            <div class="portes">
+              <img class="img_portes" src="../images/portes.png" /><br/>
+              * Para pedidos superiores a 50€
             </div><?php
           }?>
-          <div class="portes">
-            <img src="../images/portes.png" /><br/>
-            * Para pedidos superiores a 50€
-          </div>
+
       </div>
-      <div class="footer_lateral">
         <p class="copyright">
           &copy; Iris Sioux Tech Shop <?= date('Y') ?>
         </p>
-      </div>
     </aside><?php
     include('../comunes/footer.php'); ?>
   </div>
