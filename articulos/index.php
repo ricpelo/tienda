@@ -23,6 +23,8 @@
         return $ret;
     }
 
+    comprobar_usuario();
+
     $columna = isset($_GET['columna']) ? $_GET['columna'] : "codigo";
     $criterio = isset($_GET['criterio']) ? $_GET['criterio'] : "";
     $orden = isset($_GET['orden']) ? $_GET['orden'] : "codigo";

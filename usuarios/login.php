@@ -26,7 +26,8 @@
 											password = md5('$password')"); 
 		    	if(pg_num_rows($res) > 0):
 		     		$fila = pg_fetch_assoc($res, 0);
-		     		$_SESSION['usuario'] = $fila['id'];	
+		     		$_SESSION['usuario'] = $fila['id'];
+		     		$_SESSION['rol'] = $fila['rol'];	
 
 		     		if ($fila['rol_id'] == 2) {
 						header("Location: ".$url);

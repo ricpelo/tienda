@@ -11,13 +11,6 @@
 		$errores = array();
 		$_SESSION['usuario'] = 1;
 
-		function comprobar_usuario()
-		{
-			if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
-        header("Location: ../usuarios/login.php");
-      }
-		}
-
 		function comprobar_id($id)
 		{
 			global $errores;
