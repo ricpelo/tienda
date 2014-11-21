@@ -9,15 +9,16 @@
     require '../comunes/auxiliar.php';
 
 
-    $_SESSION['usuario'] = 1;
+    //$_SESSION['usuario'] = 1;
 
 
     $errores = array();
 
     function comprobar_usuario()
     {
-      if (!isset($_SESSION['usuario']))
-        header("Location: ../usuarios/login.php"); 
+      if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
+        header("Location: ../usuarios/login.php");
+      }
     }
 
     function parametro_no_vacio($par, $hum)
