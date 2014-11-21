@@ -109,67 +109,7 @@
       mostrar_login();
     include ('comunes/header.php');?>
 
-    <section class="contenido"><?php
-
-    // Se ha pulsado finalizar pedido
-      if (isset($_POST['pedido_fin'])) {
-        $numero = calcular_numero_pedido();?>
-          <div class="articulos">
-            <table>
-              <thead>
-                <tr>
-                  <th colspan="6" class="titulo2">
-                    Pedido Nº: <?= $numero ?> guardado.
-                  </th>
-                </tr>
-                <tr class="subtitulo">
-                  <th width="18%">Código</th>
-                  <th width="50%">Descripción</th>
-                  <th width="11%">Precio</th>
-                  <th width="6%">Cant.</th>
-                  <th width="12%">Subtotal</th>
-                  <th width="7%">Acción</th>
-
-                  </th>
-                </tr>
-              </thead>
-              <tbody><?php
-              foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
-                <tr>
-                  <td><?= $k ?></td>
-                  <td class="izquierda"><?= $v[0] ?></td>
-                  <td class="derecha"><?= number_format($v[1], 2, ',', '.') ?> €</td>
-                  <td class="derecha"><?= $v[2] ?></td><?php
-                  $total_linea = $v[1]*$v[2];?>
-                  <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
-                  <td>
-                    <form style="display:inline" action="index.php" method="POST">
-                      <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
-                      <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                      <input type="image" src="images/borrar24.png" title="Borrar" alt="Borrar" />
-                    </form>
-                  </td>
-                </tr><?php
-              }?>
-              </tbody>
-            </table>
-          </div>
-          <div class="paginador">
-            <div class="paginado_centro subtitulo">
-              <div class="centro">
-                <form action="index.php" method="POST">
-                  <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                  <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                  <input type="submit" value="Volver" title="Volver" alt="Volver" />
-                </form>
-              </div>
-            </div>
-          </div><?php
-        finalizar_pedido($numero);
-      } else {
-
-      // Si no ha pulsado finalizar pedido ni ver el carro se muestran los artículos.
-        if (!isset($_POST['ver_carro'])) {?>
+    <section class="contenido">
           <div class="articulos">
             <table>
               <thead>
@@ -231,64 +171,7 @@
               <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
               <input type="image" src="images/right_arrow.png" title="Pág. Siguiente" alt="Pág. Siguiente" />
             </form>
-          </div><?php
-        } else { 
-
-          // Se ha pulsado ver carro?>
-          <div class="articulos">
-            <table>
-              <thead>
-                <tr>
-                  <th colspan="6" class="titulo2">
-                    Detalle pedido actual
-                  </th>
-                </tr>
-                <tr class="subtitulo">
-                  <th width="18%">Código</th>
-                  <th width="50%">Descripción</th>
-                  <th width="11%">Precio</th>
-                  <th width="6%">Cant.</th>
-                  <th width="12%">Subtotal</th>
-                  <th width="7%">Acción</th>
-
-                  </th>
-                </tr>
-              </thead>
-              <tbody><?php
-              foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
-                <tr>
-                  <td><?= $k ?></td>
-                  <td class="izquierda"><?= $v[0] ?></td>
-                  <td class="derecha"><?= number_format($v[1], 2, ',', '.') ?> €</td>
-                  <td class="derecha"><?= $v[2] ?></td><?php
-                  $total_linea = $v[1]*$v[2];?>
-                  <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
-                  <td>
-                    <form style="display:inline" action="index.php" method="POST">
-                      <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
-                      <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                      <input type="image" src="images/borrar24.png" title="Borrar" alt="Borrar" />
-                    </form>
-                  </td>
-                </tr><?php
-              }?>
-              </tbody>
-            </table>
           </div>
-          <div class="paginador">
-            <div class="paginado_centro subtitulo">
-              <div class="centro">
-                <form action="index.php" method="POST">
-                  <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                  <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                  <input type="submit" value="Volver" title="Volver" alt="Volver" />
-                </form>
-              </div>
-            </div>
-          </div><?php
-        }
-      }?>
-
     </section>
     <aside class="bloque_derecho">
       <div class="contenido_lateral">
@@ -320,20 +203,7 @@
         </div><?php
           if (count($_SESSION['detalle_pedido']) >0 ) {?> 
             <p><u>TOTAL PEDIDO</u> <br/><?= number_format($_SESSION['total_pedido'], 2, ',', '.') ?> €</p>
-            <div class="carro">
-              <form class="carro_form" action="index.php" method="POST">
-                <input type="hidden" name="vaciar_carro" value ="" />
-                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                <input type="image" src="images/vaciar_carro.png" title="Vaciar Cesta" alt="Vaciar Cesta" />
-              </form>
-            </div>
-            <div class="finalizar_pedido">
-              <form style="display:inline" action="index.php" method="POST">
-                <input type="hidden" name="pedido_fin" value ="" />
-                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                <input type="submit" value="Finalizar Pedido" title="Finalizar Pedido" alt="Finalizar Pedido" />
-              </form>
-            </div><?php
+            <?php
           }?>
           <div class="portes">
             <img src="images/portes.png" /><br/>
@@ -345,8 +215,7 @@
           &copy; Iris Sioux Tech Shop <?= date('Y') ?>
         </p>
       </div>
-    </aside><?php
-    include('comunes/footer.php'); ?>
+    </aside>
   </div>
   </body>
 </html>
