@@ -13,8 +13,9 @@
 
 		function comprobar_usuario()
 		{
-			if (!isset($_SESSION['usuario']))
-				header("Location: ../usuarios/login.php");
+			if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
+        header("Location: ../usuarios/login.php");
+      }
 		}
 
 		function comprobar_id($id)
