@@ -96,67 +96,69 @@
 
     <section class="contenido"><?php
 
-    // MOSTRAMOS EL CARRO ?>
-      <div class="articulos">
-        <table>
-          <thead>
-            <tr>
-              <th colspan="6" class="titulo2">
-                Detalle pedido actual
-              </th>
-            </tr>
-            <tr class="subtitulo">
-              <th width="16%">Código</th>
-              <th width="48%">Descripción</th>
-              <th width="10%">Precio</th>
-              <th width="5%">Ud.</th>
-              <th width="11%">Subtotal</th>
-              <th width="10%">Acción</th>
+    // MOSTRAMOS EL CARRO SI NO SE HA PULSADO FINALIZAR PEDIDO
+      if (!isset($_POST['pedido_fin'])) {?>
 
-              </th>
-            </tr>
-          </thead>
-          <tbody><?php
-          foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
-            <tr>
-              <td><?= $k ?></td>
-              <td class="izquierda"><?= $v[0] ?></td>
-              <td class="derecha"><?= number_format($v[1], 2, ',', '.') ?> €</td>
-              <td class="derecha"><?= $v[2] ?></td><?php
-              $total_linea = $v[1]*$v[2];?>
-              <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
-              <td>
-                <form style="display:inline" action="vercarro.php" method="POST">
-                  <input type="hidden" name="codigo_add" value ="<?= $k ?>" />
-                  <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                  <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                  <input type="image" src="../images/insertar24.png" title="Añadir" alt="Añadir" />
-                </form>
-                <form style="display:inline" action="vercarro.php" method="POST">
-                  <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
-                  <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                  <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                  <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
-                </form>
-              </td>
-            </tr><?php
-          }?>
-          </tbody>
-        </table>
-      </div>
-      <div class="paginador">
-        <div class="paginado_centro subtitulo">
-          <div class="centro">
-            <form action="insertar.php" method="POST">
-              <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-              <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-              <input type="submit" value="Volver" title="Volver" alt="Volver" />
-            </form>
-          </div>
+        <div class="articulos">
+          <table>
+            <thead>
+              <tr>
+                <th colspan="6" class="titulo2">
+                  Detalle pedido actual
+                </th>
+              </tr>
+              <tr class="subtitulo">
+                <th width="16%">Código</th>
+                <th width="48%">Descripción</th>
+                <th width="10%">Precio</th>
+                <th width="5%">Ud.</th>
+                <th width="11%">Subtotal</th>
+                <th width="10%">Acción</th>
+
+                </th>
+              </tr>
+            </thead>
+            <tbody><?php
+            foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
+              <tr>
+                <td><?= $k ?></td>
+                <td class="izquierda"><?= $v[0] ?></td>
+                <td class="derecha"><?= number_format($v[1], 2, ',', '.') ?> €</td>
+                <td class="derecha"><?= $v[2] ?></td><?php
+                $total_linea = $v[1]*$v[2];?>
+                <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
+                <td>
+                  <form style="display:inline" action="vercarro.php" method="POST">
+                    <input type="hidden" name="codigo_add" value ="<?= $k ?>" />
+                    <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                    <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+                    <input type="image" src="../images/insertar24.png" title="Añadir" alt="Añadir" />
+                  </form>
+                  <form style="display:inline" action="vercarro.php" method="POST">
+                    <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
+                    <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                    <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+                    <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
+                  </form>
+                </td>
+              </tr><?php
+            }?>
+            </tbody>
+          </table>
         </div>
-      </div><?php
-    // Se ha pulsado finalizar pedido
-      if (isset($_POST['pedido_fin'])) {
+        <div class="paginador">
+          <div class="paginado_centro subtitulo">
+            <div class="centro">
+              <form action="insertar.php" method="POST">
+                <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+                <input type="submit" value="Volver" title="Volver" alt="Volver" />
+              </form>
+            </div>
+          </div>
+        </div><?php
+      } else {
+        // Se ha pulsado finalizar pedido
         $numero = calcular_numero_pedido();?>
           <div class="articulos">
             <table>
