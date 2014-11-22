@@ -7,8 +7,10 @@
   }
 
   function comprobar_usuario()
-{
-    if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
-        header("Location: ../usuarios/login.php");
+  {
+    if (!isset($_SESSION['usuario'])) {
+      $_SESSION['url'] = $_SERVER["REQUEST_URI"];
+      header("Location: ../usuarios/login.php");
     }
-}
+    return $_SESSION['usuario'];
+  }

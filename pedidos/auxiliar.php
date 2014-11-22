@@ -1,7 +1,6 @@
 <?php  // FUNCIONES AUXILIARES PARA INSERCION PEDIDOS
 
       function finalizar_pedido($numero) {
-
       if ($_POST['id_unica'] == $_SESSION['id_unica']) {
         $usuario_id = $_SESSION['usuario'];
         $con = conectar();
@@ -28,7 +27,6 @@
             $_SESSION['total_pedido'] = 0; // Ponemos a 0 el total del pedido.
             unset ($_SESSION['id_unica']); // Destruimos la variable de sesión única.S i hay refresco de
                                            //  pantalla no se realiza la inserción de datos en la BBDD.
-
           } else { // Si no existe ningún pedido con ese número (no se ha creado) devuelve 0
             return 0;
           }
