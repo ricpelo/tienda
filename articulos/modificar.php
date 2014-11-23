@@ -9,7 +9,6 @@
 		require '../comunes/auxiliar.php';
 
 		$errores = array();
-		$_SESSION['usuario'] = 1;
 
 		function comprobar_id($id)
 		{
