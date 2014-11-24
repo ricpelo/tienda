@@ -131,14 +131,16 @@
         <input type="text" value="<?= (isset($_POST['nick'])) ? $_POST['nick'] : '' ?>" name ="nick"> <br />
         <label for="pass">Contraseña</label>
         <input type="password" name="password"> <br /> <?php
-        	if (comprobar_admin()){
-        		?>
-        		<input type="radio" name="rol" value="1" >Administrador <br>
-        		<input type="radio" name="rol" value="2" checked="checked">Cliente<br>
-        		<?php
-        	}else{
-        		?><input type="hidden" name="rol" value="2"><?php
-        	}
+          if(isset($_SESSION['usuario'])){
+          	if (comprobar_admin()){
+          		?>
+          		<input type="radio" name="rol" value="1" >Administrador <br>
+          		<input type="radio" name="rol" value="2" checked="checked">Cliente<br>
+          		<?php
+          	}
+          }else{
+              ?><input type="hidden" name="rol" value="2"><?php
+          }
         	?>
         
         <input type="submit" value="Alta">        
