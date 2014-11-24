@@ -8,28 +8,14 @@
 
   require '../comunes/auxiliar.php';
 
-  function sentido($orden, $sentido, $k)
-    {
-        if ($orden == $k)
-        {
-            $ret = ($sentido == "asc") ? "desc" : "asc";
-        }
-        else
-        {
-            $ret = "asc";
-        }
-      
-        return $ret;
-    }
-
-    $orden = isset($_GET['orden']) ? $_GET['orden'] : "codigo";
-    $sentido = isset($_GET['sentido']) ? $_GET['sentido'] : "asc";
+ 
 
   $con = conectar();
   $id = 1;
   $cols= array('cliente_id' => 'Id del cliente',
                'importe' => 'Importe del pedido', 
                'gastos_envio' => 'Gastos de envio');
+
 
   if(isset($_GET['columna'], $_GET['criterio']))
   {
@@ -50,19 +36,10 @@
             $where = "where $columna::text = '$criterio'";
           
     }
-     if (!isset($cols[$orden]))
-    {
-        $orden = "cliente_id";
-    }
-    
-    if ($sentido != "asc" && $sentido != "desc")
-    {
-        $sentido = "asc";
-    }
+     
 
 
-
-  $res= pg_query($con, "select * from pedidos $where"); ?>
+  $res= pg_query($con, "select * from pedidos $where");?>
 
   <form action="index.php" method="GET">
       
@@ -85,7 +62,7 @@
             foreach ($cols as $k => $v):?>
                 <th><?= $v ?></th><?php
             endforeach;?>
-            <th colspan="2">Operaciones</th>
+            <th colspan="3">Operaciones</th>
         </thead> 
         <tbody><?php
             for ($i = 0; $i < pg_num_rows($res); $i++):
@@ -108,16 +85,17 @@
                             <input type="submit" value="Borrar">
                         </form>
                     </td>
+                    <td>
+                        <form action="ver.php" method="get">
+                            <input type="hidden" name="id" 
+                                  value="<?=$fila['id']?>">
+                            <input type="submit" value="Ver">
+                        </form>
+                    </td>
                 </tr><?php
             endfor;?>
         </tbody>
     </table>
-    <hr>
-
-    <a href="insertar.php">
-        <input type="button" value="Insertar un nuevo Artículo" />
-    </a><?php
-
-    ?>
+  
 </body>
 </html>
