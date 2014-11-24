@@ -1,4 +1,6 @@
-<?php  // FUNCIONES AUXILIARES PARA INSERCION PEDIDOS
+<?php  
+
+// FUNCIONES AUXILIARES PARA INSERCION PEDIDOS
 
       function finalizar_pedido($numero) {
       if ($_POST['id_unica'] == $_SESSION['id_unica']) {
