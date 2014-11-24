@@ -52,9 +52,9 @@
 
     // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
 
-        rellenar_array_articulos($filtro, "descripcion", $stock_flag); // El segundo parámetro  define el orden.
-        $numero_articulos = total_articulos();
-*/
+        rellenar_array_articulos($filtro, "descripcion", $stock_flag); // El segundo parámetro  define el orden.*/
+    $numero_articulos = total_articulos_pedido();
+
     if (isset($_POST['codigo_add'])) {
       $codigo_art = $_POST['codigo_add'];
       insertar_articulo_pedido($codigo_art);
@@ -68,28 +68,10 @@
 
 
 
-        // CONTROL DEL PAGINADO
-
-        $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
-
-        if (isset($_POST['pag_atras'])) {
-          if ($ind_art-ELE_PAG >=0 ){
-            $ind_art -= ELE_PAG;
-          } else {
-            $ind_art = 0;
-          }
-        }
-
-        if (isset($_POST['pag_adelante'])) {
-          if ($ind_art+ELE_PAG <=$numero_articulos ){
-            $ind_art += ELE_PAG;
-          } else {
-            $ind_art = $ind_art;
-          }
-        }
-
-        $listado_articulos_paginado = (array_slice($_SESSION['detalle_pedido'], $ind_art, ELE_PAG, true));?>
-
+    // CONTROL DEL PAGINADO
+    
+    $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
+    $listado_articulos_paginado = paginado($_SESSION['detalle_pedido'], $numero_articulos);?>
 
   <div class="principal"><?php
     include ('../comunes/header.php');?>
@@ -108,9 +90,9 @@
                 </th>
               </tr>
               <tr class="subtitulo">
-                <th width="16%">Código</th>
+                <th width="15%">Código</th>
                 <th width="48%">Descripción</th>
-                <th width="10%">Precio</th>
+                <th width="11%">Precio</th>
                 <th width="5%">Ud.</th>
                 <th width="11%">Subtotal</th>
                 <th width="10%">Acción</th>
@@ -119,7 +101,7 @@
               </tr>
             </thead>
             <tbody><?php
-            foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
+            foreach ($listado_articulos_paginado as $k => $v) {?>
               <tr>
                 <td><?= $k ?></td>
                 <td class="izquierda"><?= $v[0] ?></td>
@@ -147,15 +129,25 @@
           </table>
         </div>
         <div class="paginador">
+          <form class="paginado_izq" action="vercarro.php" method="POST">
+            <input type="hidden" name="pag_atras" value ="" />
+            <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+            <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+            <input type="hidden" name="filtro" value="<?= $filtro ?>" />
+            <input type="image" src="../images/left_arrow.png" title="Pág. Anterior" alt="Pág. Anterior" />
+          </form>
           <div class="paginado_centro subtitulo">
             <div class="centro">
-              <form action="insertar.php" method="POST">
-                <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                <input type="submit" value="Volver" title="Volver" alt="Volver" />
-              </form>
+              <?= $ind_art+1 ?>-<?= (($ind_art+ELE_PAG > $numero_articulos) ? $numero_articulos : $ind_art+ELE_PAG) ?> de <?= $numero_articulos ?> artículos
             </div>
           </div>
+          <form class="paginado_der" action="vercarro.php" method="POST">
+            <input type="hidden" name="pag_adelante" value ="" />
+            <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+            <input type="hidden" name="filtro" value="<?= $filtro ?>" />
+            <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+            <input type="image" src="../images/right_arrow.png" title="Pág. Siguiente" alt="Pág. Siguiente" />
+          </form>
         </div><?php
       } else {
         // Se ha pulsado finalizar pedido
@@ -178,7 +170,7 @@
                 </tr>
               </thead>
               <tbody><?php
-              foreach ($_SESSION['detalle_pedido'] as $k => $v) {?>
+              foreach ($listado_articulos_paginado as $k => $v) {?>
                 <tr>
                   <td><?= $k ?></td>
                   <td class="izquierda"><?= $v[0] ?></td>
@@ -191,17 +183,27 @@
               </tbody>
             </table>
           </div>
-          <div class="paginador">
-            <div class="paginado_centro subtitulo">
-              <div class="centro">
-                <form action="insertar.php" method="POST">
-                  <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
-                  <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                  <input type="submit" value="Volver" title="Volver" alt="Volver" />
-                </form>
-              </div>
+        <div class="paginador">
+          <form class="paginado_izq" action="vercarro.php" method="POST">
+            <input type="hidden" name="pag_atras" value ="" />
+            <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+            <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+            <input type="hidden" name="filtro" value="<?= $filtro ?>" />
+            <input type="image" src="../images/left_arrow.png" title="Pág. Anterior" alt="Pág. Anterior" />
+          </form>
+          <div class="paginado_centro subtitulo">
+            <div class="centro">
+              <?= $ind_art+1 ?>-<?= (($ind_art+ELE_PAG > $numero_articulos) ? $numero_articulos : $ind_art+ELE_PAG) ?> de <?= $numero_articulos ?> artículos
             </div>
-          </div><?php
+          </div>
+          <form class="paginado_der" action="vercarro.php" method="POST">
+            <input type="hidden" name="pag_adelante" value ="" />
+            <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+            <input type="hidden" name="filtro" value="<?= $filtro ?>" />
+            <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
+            <input type="image" src="../images/right_arrow.png" title="Pág. Siguiente" alt="Pág. Siguiente" />
+          </form>
+        </div><?php
         finalizar_pedido($numero);
       }?>
 

@@ -42,7 +42,7 @@
     function vaciar_carro() {
       if ($_POST['id_unica'] == $_SESSION['id_unica']) {
         foreach ($_SESSION['detalle_pedido'] as $k => $v) {
-          actualiza_stock($k, -($v[2])); // Restituimos las existencias de cada artículo
+          actualiza_stock($k, $v[2]); // Restituimos las existencias de cada artículo
         }
             $_SESSION['detalle_pedido'] = array(); // Vaciamos el array del pedido.
             $_SESSION['total_pedido'] = 0; // Ponemos a 0 el total del pedido.
@@ -58,6 +58,7 @@
       }
       pg_close($con);
     }
+
 
     function calcular_numero_pedido() {
       $con = conectar();
@@ -81,9 +82,12 @@
       if ($_POST['id_unica'] == $_SESSION['id_unica'] && tiene_stock($codigo_art)) {      
         $codigo_art = (float)($codigo_art);
 
-        actualiza_stock($codigo_art, 1);
-        $_SESSION['listado_articulos'][$codigo_art][2] --;
-
+        actualiza_stock($codigo_art, -1);
+       $_SESSION['listado_articulos'][$codigo_art][2] --;
+       if ($_SESSION['listado_articulos'][$codigo_art][2] == 0) {
+        unset($_SESSION['listado_articulos'][$codigo_art]);
+       }
+       
         $con = conectar();
         $res = pg_query($con, "select descripcion, precio from articulos where codigo = $codigo_art");
         if (pg_affected_rows($res) == 1) {
@@ -106,7 +110,7 @@
       if ($_POST['id_unica'] == $_SESSION['id_unica'] && isset($_SESSION['detalle_pedido'][$codigo_art])) {
         $codigo_art = (float)($codigo_art);
 
-        actualiza_stock($codigo_art, -1);
+        actualiza_stock($codigo_art, 1);
         $_SESSION['listado_articulos'][$codigo_art][2] ++;
 
 
@@ -151,10 +155,11 @@
 
     function actualiza_stock($codigo_art, $cantidad) {
 
+
       $codigo_art = (float)($codigo_art);
 
       $con = conectar();
-      $res = pg_query($con, "update articulos SET existencias = existencias-($cantidad) where codigo = $codigo_art");
+      $res = pg_query($con, "update articulos SET existencias = existencias+$cantidad where codigo = $codigo_art");
 
     }
 
@@ -169,6 +174,10 @@
 
     function total_articulos() {
       return count($_SESSION['listado_articulos']);
+    }
+
+    function total_articulos_pedido() {
+      return count($_SESSION['detalle_pedido']);
     }
 
     function rellenar_array_articulos($filtro, $order, $stock) {
@@ -188,6 +197,29 @@
             }
           }
         }
+    }
+
+    function paginado($array, $numero_articulos) {
+
+      global $ind_art;
+      
+      if (isset($_POST['pag_atras'])) {
+        if ($ind_art-ELE_PAG >=0 ){
+          $ind_art -= ELE_PAG;
+        } else {
+          $ind_art = 0;
+        }
+      }
+
+      if (isset($_POST['pag_adelante'])) {
+        if ($ind_art+ELE_PAG <=$numero_articulos ){
+          $ind_art += ELE_PAG;
+        } else {
+          $ind_art = $ind_art;
+        }
+      }
+      return (array_slice($array, $ind_art, ELE_PAG, true));
+
     }
 
   // FIN   FUNCIONES AUXILIARES PARA INSERCION PEDIDOS
