@@ -9,6 +9,11 @@
 
     require '../comunes/auxiliar.php';
 
+    $usuario= comprobar_usuario();
+    $nick = comprobar_nick($usuario);?>
+
+    <p style="text-align: right">Administrador: <strong><?=$nick?></strong></p><hr><?php
+
     function sentido($orden, $sentido, $k)
     {
         if ($orden == $k)

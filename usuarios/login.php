@@ -16,7 +16,7 @@
 				$res = pg_query($con, "select id ,rol_id
 									from usuarios
 									where nick = '$nick' and
-											password = md5('$password')"); 
+									  password = md5('$password')"); 
 		    	if(pg_num_rows($res) > 0):
 		     		$fila = pg_fetch_assoc($res, 0);
 
@@ -28,7 +28,7 @@
 		     		$_SESSION['rol'] = $fila['rol_id'];
 
 		     		if ($_SESSION['rol'] == 2) {
-						header("Location: /tienda/pedidos/insertar.php");
+						header("Location: /tienda/");
 					} else {
 						header("Location: /tienda/menu_adm.php");
 					}
