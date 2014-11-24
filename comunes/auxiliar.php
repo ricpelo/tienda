@@ -18,8 +18,10 @@
   function comprobar_administrador()
   {
     if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
-      header ("Location: ../usuarios/login.php");
+      $_SESSION['url'] = $_SERVER["REQUEST_URI"];
+      header ("Location: /tienda//usuarios/login.php");
     }
+    return $_SESSION['usuario'];
   }
 
   function comprobar_nick($id)

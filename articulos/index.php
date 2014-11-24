@@ -9,7 +9,7 @@
 
     require '../comunes/auxiliar.php';
 
-    $usuario= comprobar_usuario();
+    $usuario = comprobar_administrador();
     $nick = comprobar_nick($usuario);?>
 
     <p style="text-align: right">Administrador: <strong><?=$nick?></strong></p><hr><?php
@@ -27,8 +27,6 @@
       
         return $ret;
     }
-
-    comprobar_usuario();
 
     $columna = isset($_GET['columna']) ? $_GET['columna'] : "codigo";
     $criterio = isset($_GET['criterio']) ? $_GET['criterio'] : "";

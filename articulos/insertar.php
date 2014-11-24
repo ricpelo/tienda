@@ -8,18 +8,10 @@
 <body><?php
     require '../comunes/auxiliar.php';
 
-
-    //$_SESSION['usuario'] = 1;
-
+    $usuario = comprobar_administrador();
+    $nick = comprobar_nick($usuario);
 
     $errores = array();
-
-    function comprobar_usuario()
-    {
-      if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
-        header("Location: ../usuarios/login.php");
-      }
-    }
 
     function parametro_no_vacio($par, $hum)
     {
@@ -134,7 +126,7 @@
       }
     }
 
-    comprobar_usuario();
+
     if (isset($_POST['codigo'], $_POST['descripcion'], $_POST['precio'], 
         $_POST['existencias']))
     {

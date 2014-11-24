@@ -8,6 +8,9 @@
 <body><?php
 		require '../comunes/auxiliar.php';
 
+    $usuario = comprobar_administrador();
+    $nick = comprobar_nick($usuario);
+
 		$errores = array();
 
 		function comprobar_id($id)
