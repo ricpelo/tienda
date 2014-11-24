@@ -10,7 +10,10 @@
 			require '../comunes/auxiliar.php';
 
 			$con=conectar();
-			$res=pg_query($con, 'select * from clientes');
+			//$res=pg_query($con, 'select * from clientes');
+			$res=pg_query($con,'select clientes.*, usuarios.nick
+								from clientes join usuarios on 
+								clientes.usuario_id=usuarios.id');
 			$cols=array_keys(pg_fetch_assoc($res, 0));
 
 			?>
