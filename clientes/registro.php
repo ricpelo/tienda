@@ -11,12 +11,7 @@
     $con = conectar();
     $errores = [];
 
-    $_SESSION['usuario'] = 1;
-
-    function comprobar_usuario(){
-      if (!isset($_SESSION['usuario']))
-        header("Location: ../usuarios/login.php"); 
-    }
+    //$_SESSION['usuario'] = 1;
 
     function comprobar_codigo(){ //----------------------------------marca isaac
       global $errores;
@@ -180,7 +175,7 @@
       if (pg_num_rows($res) == 1){ ?>
         <p>El usuario <strong><?= $nick ?></strong> ha sido insertado 
                                                         correctamente</p> <br /> 
-        <a href="altas.php"><button>Volver</button></a> <?php
+        <a href="index.php"><button>Volver</button></a> <?php
       }
 
     }
