@@ -20,9 +20,8 @@
     }
 
     // Recibe el usuario o redirige a login.
-      $user_id = comprobar_login();
-      $rol_descripcion = devolver_descripcion_rol(devolver_rol_usuario($user_id));
-      $nick = devolver_nick_usuario($user_id);
+//      $user_id = comprobar_usuario();
+//      $nick = comprobar_nick($user_id);
 
     // Crea el array detalle_pedido si aún no existe
     if (!isset($_SESSION['detalle_pedido'])) {
@@ -58,29 +57,46 @@
     $sentido  = (isset($_GET['sentido']))  ? trim($_GET['sentido']) : 'asc';
     
 
-  // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
+    // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
 
-    if (isset($_POST['vaciar_carro'])) {
-      vaciar_carro();
-    }
+        if (isset($_POST['vaciar_carro'])) {
+          vaciar_carro();
+        }
 
-    rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock']); // El segundo parámetro  define el orden.
-    $numero_articulos = total_articulos();
+        rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock']); // El segundo parámetro  define el orden.
+        $numero_articulos = total_articulos();
 
-    if (isset($_POST['codigo_add'])) {
-      $codigo_art = $_POST['codigo_add'];
-      insertar_articulo_pedido($codigo_art);
-    }
+        if (isset($_POST['codigo_add'])) {
+          $codigo_art = $_POST['codigo_add'];
+          insertar_articulo_pedido($codigo_art);
+        }
 
-    if (isset($_POST['codigo_del'])) {
-      $codigo_art = $_POST['codigo_del'];
-      borrar_articulo_pedido($codigo_art);
-    }
+        if (isset($_POST['codigo_del'])) {
+          $codigo_art = $_POST['codigo_del'];
+          borrar_articulo_pedido($codigo_art);
+        }
 
-    // CONTROL DEL PAGINADO
-    
-    $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
-    $listado_articulos_paginado = paginado($_SESSION['listado_articulos'], $numero_articulos);?>
+        // CONTROL DEL PAGINADO
+
+        $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
+
+        if (isset($_POST['pag_atras'])) {
+          if ($ind_art-ELE_PAG >=0 ){
+            $ind_art -= ELE_PAG;
+          } else {
+            $ind_art = 0;
+          }
+        }
+
+        if (isset($_POST['pag_adelante'])) {
+          if ($ind_art+ELE_PAG <=$numero_articulos ){
+            $ind_art += ELE_PAG;
+          } else {
+            $ind_art = $ind_art;
+          }
+        }
+
+        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, ELE_PAG, true));?>
 
 
   <div class="principal"><?php
