@@ -15,6 +15,13 @@
     return $_SESSION['usuario'];
   }
 
+  function comprobar_administrador()
+  {
+    if (!(isset($_SESSION['usuario'], $_SESSION['rol']) && $_SESSION['rol'] == 1)) {
+      header ("Location: ../usuarios/login.php");
+    }
+  }
+
   function comprobar_nick($id)
   {
     $con = conectar();
