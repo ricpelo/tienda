@@ -234,6 +234,9 @@
     }
 
     try{
+      if(!isset($_POST['nick'])){
+        
+      }else{
         limpiar_datos();
 
         comprobar_restricciones();
@@ -245,6 +248,7 @@
         insertar_usuario();
         insertar_cliente();
         pintar_usuario_insertado();
+      }
     }catch(Exception $e){
       foreach ($errores as $v) { ?>
         <p><?= $v ?></p> <?php
