@@ -11,9 +11,15 @@
 
 			$con=conectar();
 			//$res=pg_query($con, 'select * from clientes');
-			$res=pg_query($con,'select clientes.*, usuarios.nick
+			/*$res=pg_query($con,'select clientes.*, usuarios.nick
 								from clientes join usuarios on 
-								clientes.usuario_id=usuarios.id');
+								clientes.usuario_id=usuarios.id');*/
+
+			$res=pg_query($con,'select clientes.*, usuarios.nick, roles.descripcion as rol
+								from clientes 
+								join usuarios on clientes.usuario_id=usuarios.id
+								join roles on roles.id=usuarios.rol_id');
+
 			$cols=array_keys(pg_fetch_assoc($res, 0));
 
 			?>
@@ -61,53 +67,15 @@
 					?>
 				</tbody>
 			</table>
+			<br>
+			<a href="/tienda/clientes/registro.php"><input type="button" value="Dar de alta nuevo Cliente"></a>
+			
 			<?php
 			pg_close($con);
 
-			//comienzo de la tabla usuarios
-			$con=conectar();
-			$res=pg_query($con, 'select * from usuarios');
-			$cols=array_keys(pg_fetch_assoc($res, 0));
-
+			
 			?>
-			<table border="1">
-				<caption>USUARIOS</caption>
-				<thead>
-					<tr>
-					<?php
-					foreach ($cols as $col) {
-						?><td><?= $col ?></td><?php
-					}
-					?>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					for ($i=0; $i < pg_num_rows($res); $i++) { 
-						$fila=pg_fetch_assoc($res ,$i);
-						?>
-						<tr>
-							<?php
-							foreach ($cols as $col) {
-								?>
-								<td><?= $fila[$col]?></td>
-								<?php
-							}
-							?>
-							 <td>
-	                        <form action="altas_clientes.php" method="get">
-	                            <input type="hidden" name="id" 
-	                                  value="<?=$fila['id']?>">
-	                            <input type="submit" value="Dar de alta como Cliente">
-	                        </form>
-	                    </td>
-	                    
-						</tr>
-						<?php
-					}
-					?>
-				</tbody>
-			</table>
+			
 		
 
 
