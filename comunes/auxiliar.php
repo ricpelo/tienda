@@ -44,3 +44,14 @@
       header("Location: /tienda/usuarios/login.php");
     endif;
   }
+
+  function contar_filas($tabla)
+  {
+    $con = conectar();
+
+    $res = pg_query($con, "select count(*) as nfilas from $tabla");
+
+    $fila = pg_fetch_assoc($res);
+
+    return $fila['nfilas'];
+  }
