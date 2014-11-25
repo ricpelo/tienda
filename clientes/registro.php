@@ -92,7 +92,7 @@
       
       if ($res == FALSE || pg_affected_rows($res)!=1) {
         $errores[]="No se ha podido insertar el cliente correctamente";
-        comprobar_errores();
+        //comprobar_errores();
       }
     }
 
@@ -101,49 +101,48 @@
       global $errores;
 
       if (count($errores) != 0 || !isset($_POST['nick'])): ?>	
+        <h2>Insertar cliente</h2>
+        <h3>Datos Personales</h3>
+        <form action="registro.php" method="post">
+          <label for="codigo">Codigo :</label>
+          <input type="text" name="codigo" value="<?= (isset($_POST['codigo'])) ? $_POST['codigo'] : '' ?>"><br>
+          <label for="nombre">Nombre : </label>
+          <input type="text" name="nombre" value="<?= (isset($_POST['nombre'])) ? $_POST['nombre'] : '' ?>" ><br>
+          <label for="apellidos">Apellidos : </label>
+          <input type="text" name="apellidos" value="<?= (isset($_POST['apellidos'])) ? $_POST['apellidos'] : '' ?>"><br>
+          <label for="dni">DNI :</label>
+          <input type="text" name="dni" value="<?= (isset($_POST['dni'])) ? $_POST['dni'] : '' ?>"><br>
+          <label for="direccion" >Dirección: </label>
+          <input type="text" name="direccion" value="<?= (isset($_POST['direccion'])) ? $_POST['direccion'] : '' ?>"><br>
+          <label for="poblacion">Población: </label>
+          <input type="text" name="poblacion" value="<?= (isset($_POST['poblacion'])) ? $_POST['poblacion'] : '' ?>"><br>
+          <label for="codigopostal">Código postal : </label>
+          <input type="text" name="codigopostal" value="<?= (isset($_POST['codigopostal'])) ? $_POST['codigopostal'] : '' ?>"><br>   
+          <h3>Datos de Usuario</h3>     
+          <label for="nick">Nick</label>
+          <input type="text" value="<?= (isset($_POST['nick'])) ? $_POST['nick'] : '' ?>" name ="nick"> <br />
+          <label for="pass">Contraseña</label>
+          <input type="password" name="password"> <br /> <?php
+            if(isset($_SESSION['usuario'])){
+            	if (comprobar_admin()){
+            		?>
+            		<input type="radio" name="rol" value="1" >Administrador <br>
+            		<input type="radio" name="rol" value="2" checked="checked">Cliente<br>
+            		<?php
+            	}
+            }else{
+                ?><input type="hidden" name="rol" value="2"><?php
+            }
+          	?>
+          
+          <input type="submit" value="Alta">        
+        </form><?php
 
-      <h2>Insertar cliente</h2>
-      <h3>Datos Personales</h3>
-      <form action="registro.php" method="post">
-        <label for="codigo">Codigo :</label>
-        <input type="text" name="codigo" value="<?= (isset($_POST['codigo'])) ? $_POST['codigo'] : '' ?>"><br>
-        <label for="nombre">Nombre : </label>
-        <input type="text" name="nombre" value="<?= (isset($_POST['nombre'])) ? $_POST['nombre'] : '' ?>" ><br>
-        <label for="apellidos">Apellidos : </label>
-        <input type="text" name="apellidos" value="<?= (isset($_POST['apellidos'])) ? $_POST['apellidos'] : '' ?>"><br>
-        <label for="dni">DNI :</label>
-        <input type="text" name="dni" value="<?= (isset($_POST['dni'])) ? $_POST['dni'] : '' ?>"><br>
-        <label for="direccion" >Dirección: </label>
-        <input type="text" name="direccion" value="<?= (isset($_POST['direccion'])) ? $_POST['direccion'] : '' ?>"><br>
-        <label for="poblacion">Población: </label>
-        <input type="text" name="poblacion" value="<?= (isset($_POST['poblacion'])) ? $_POST['poblacion'] : '' ?>"><br>
-        <label for="codigopostal">Código postal : </label>
-        <input type="text" name="codigopostal" value="<?= (isset($_POST['codigopostal'])) ? $_POST['codigopostal'] : '' ?>"><br>   
-        <h3>Datos de Usuario</h3>     
-        <label for="nick">Nick</label>
-        <input type="text" value="<?= (isset($_POST['nick'])) ? $_POST['nick'] : '' ?>" name ="nick"> <br />
-        <label for="pass">Contraseña</label>
-        <input type="password" name="password"> <br /> <?php
-          if(isset($_SESSION['usuario'])){
-          	if (comprobar_admin()){
-          		?>
-          		<input type="radio" name="rol" value="1" >Administrador <br>
-          		<input type="radio" name="rol" value="2" checked="checked">Cliente<br>
-          		<?php
-          	}
-          }else{
-              ?><input type="hidden" name="rol" value="2"><?php
-          }
-        	?>
-        
-        <input type="submit" value="Alta">        
-      </form><?php
-
-      if (isset($_SESSION['usuario']) && comprobar_admin()){ ?>
-        <a href="index.php"><button>Cancelar</button></a> <?php
-      }else{ ?>
-        <a href="/tienda/"><button>Cancelar</button></a> <?php
-      }
+        if (isset($_SESSION['usuario']) && comprobar_admin()){ ?>
+          <a href="index.php"><button>Cancelar</button></a> <?php
+        }else{ ?>
+          <a href="/tienda/"><button>Cancelar</button></a> <?php
+        }
       endif;
     }
 
@@ -163,8 +162,18 @@
       }
     }
 
-    function comprobar_nick(){
-      
+    function comprobar_si_existe_nick(){
+      global $con;
+      global $errores;
+
+      $nick = trim($_POST['nick']);
+
+      $res = pg_query_params($con, "select id
+                                      from usuarios
+                                     where nick = $1", [$nick]);
+
+      if(pg_num_rows($res) == 1)
+        $errores[] = "el nick ya existe";
     }
 
     function pintar_usuario_insertado(){
@@ -178,8 +187,13 @@
 
       if (pg_num_rows($res) == 1){ ?>
         <p>El usuario <strong><?= $nick ?></strong> ha sido insertado 
-                                                        correctamente</p> <br /> 
-        <a href="index.php"><button>Volver</button></a> <?php
+                                                        correctamente</p> 
+                                                        <br /> <?php
+        if (isset($_SESSION['usuario']) && comprobar_admin()){ ?>
+          <a href="index.php"><button>Volver</button></a> <?php
+        }else{ ?>
+          <a href="/tienda/"><button>Volver</button></a> <?php
+        }        
       }
 
     }
@@ -211,30 +225,18 @@
 
     function insertar_usuario(){
       global $con;
-      global $errores;
 
       extract($_POST);
       $password = md5($password);
-
-      $res = pg_query_params($con, "select *
-                                      from usuarios
-                                     where nick = $1", [$nick]);
-
-      if(pg_num_rows($res) == 0){
-        
-        $res = pg_query($con, "begin");
-        $res = pg_query($con, "lock table usuarios in share mode");
-        $res = pg_query_params($con, "insert into usuarios 
-                                                  (nick, password, rol_id)
-                                      values ($1, $2, $3)", 
-                                                  [$nick, $password, $rol]);
-        comprobar_insertar($res);
-        //$res = pg_query($con, "commit");
-      }else{
-        $errores[] = "el nick ya existe";
-
-        comprobar_errores();
-      }
+      
+      $res = pg_query($con, "begin");
+      $res = pg_query($con, "lock table usuarios in share mode");
+      $res = pg_query_params($con, "insert into usuarios 
+                                                (nick, password, rol_id)
+                                    values ($1, $2, $3)", 
+                                                [$nick, $password, $rol]);
+      comprobar_insertar($res);
+      //$res = pg_query($con, "commit");
     }
 
     try{
@@ -245,10 +247,12 @@
         comprobar_codigo();
         comprobar_dni();
         comprobar_codigo_postal();
-        comprobar_nick();
+        comprobar_si_existe_nick();
+        comprobar_errores();
 
         insertar_usuario();
         insertar_cliente();
+        comprobar_errores();
         pintar_usuario_insertado();
       }
     }catch(Exception $e){
