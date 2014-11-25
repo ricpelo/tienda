@@ -40,7 +40,7 @@
 
       $res = pg_query_params($con, "select *
                                from usuarios
-                              where id = $1", [$usuario]);
+                              where id::text = $1", [$usuario]);
 
       if (pg_num_rows($res) == 1){
         $fila = pg_fetch_assoc($res);
@@ -96,19 +96,12 @@
       }
     }
 
-    function obtener_usuario(){
-      $usuario = (isset($_SESSION['usuario'])) ?
-                                        (int) trim($_SESSION['usuario']) : "";
-      return $usuario;
-    }
+    function form_nuevo_usuario(){     	
+      global $con; 
+      global $errores;
 
-    function form_nuevo_usuario(){ 
+      if (count($errores) != 0 || !isset($_POST['nick'])): ?>	
 
-    	
-      global $con; ?>
-		
-
-		
       <h2>Insertar cliente</h2>
       <h3>Datos Personales</h3>
       <form action="registro.php" method="post">
@@ -144,9 +137,14 @@
         	?>
         
         <input type="submit" value="Alta">        
-      </form>
+      </form><?php
 
-      <a href="index.php"><button>Cancelar</button></a> <?php
+      if (isset($_SESSION['usuario']) && comprobar_admin()){ ?>
+        <a href="index.php"><button>Cancelar</button></a> <?php
+      }else{ ?>
+        <a href="/tienda/"><button>Cancelar</button></a> <?php
+      }
+      endif;
     }
 
     function limpiar_datos(){
@@ -158,11 +156,15 @@
       global $errores;
 
       if(!(strlen($_POST['nick']) <= 15) || (strlen($_POST['nick']) == 0))
-        $errores[] = "Error: Nick debe ser inferior o igual a 15 caracteres";
+        $errores[] = "Nick debe ser inferior o igual a 15 caracteres";
 
       if(strlen($_POST['password']) == 0){
-        $errores[] = "Error: Debe introducir una contraseña";
+        $errores[] = "Debe introducir una contraseña";
       }
+    }
+
+    function comprobar_nick(){
+      
     }
 
     function pintar_usuario_insertado(){
@@ -227,40 +229,37 @@
                                       values ($1, $2, $3)", 
                                                   [$nick, $password, $rol]);
         comprobar_insertar($res);
-        $res = pg_query($con, "commit");
+        //$res = pg_query($con, "commit");
       }else{
-        $errores[] = "Error: el nick ya existe";
+        $errores[] = "el nick ya existe";
 
         comprobar_errores();
       }
     }
 
     try{
-      if(!isset($_POST['nick'])){
-        
-      }else{
+      if(isset($_POST['nick'])){
         limpiar_datos();
 
         comprobar_restricciones();
         comprobar_codigo();
         comprobar_dni();
         comprobar_codigo_postal();
+        comprobar_nick();
 
-        comprobar_errores();
         insertar_usuario();
         insertar_cliente();
         pintar_usuario_insertado();
       }
     }catch(Exception $e){
       foreach ($errores as $v) { ?>
-        <p><?= $v ?></p> <?php
+        <p><?= "Error: " . $v ?></p> <?php
       } 
 
     }finally {
     	form_nuevo_usuario();
       $res = pg_query($con, "commit");
       pg_close($con);
-
     } ?>
   </body>
 </html>
