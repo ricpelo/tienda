@@ -10,7 +10,9 @@
     require '../comunes/auxiliar.php';
 
     $usuario = comprobar_administrador();
-    $nick = comprobar_nick($usuario);?>
+    $nick = comprobar_nick($usuario);
+
+    $nfilas = contar_filas('articulos');?>
 
     <p style="text-align: right">Administrador: <strong><?=$nick?></strong></p><hr><?php
 
