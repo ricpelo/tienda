@@ -179,7 +179,14 @@
                   $total_linea = $v[1]*$v[2];?>
                   <td class="derecha"><?= number_format($total_linea, 2, ',', '.') ?> €</td>
                 </tr><?php
-              }?>
+              }
+                if ($ind_art+ELE_PAG > $numero_articulos) {?>
+                  <tr class="celdas_vacias">
+                    <td colspan="2"></td>
+                    <td colspan="2" class="derecha">TOTAL PEDIDO</td>
+                    <td class="derecha"><?= number_format($_SESSION['total_pedido'], 2, ',', '.') ?> €</td>
+                  </tr><?php
+                }?>
               </tbody>
             </table>
           </div>

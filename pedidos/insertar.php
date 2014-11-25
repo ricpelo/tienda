@@ -57,14 +57,8 @@
     $sentido  = (isset($_GET['sentido']))  ? trim($_GET['sentido']) : 'asc';
     
 
-    // Rellena el array de articulos e indexa los ELE_PAG comenzando por $ind_art en un array auxiliar;
 
-        if (isset($_POST['vaciar_carro'])) {
-          vaciar_carro();
-        }
 
-        rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock']); // El segundo parámetro  define el orden.
-        $numero_articulos = total_articulos();
 
         if (isset($_POST['codigo_add'])) {
           $codigo_art = $_POST['codigo_add'];
@@ -79,24 +73,31 @@
         // CONTROL DEL PAGINADO
 
         $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
+        $nfilas = contar_filas("articulos");
+        $npags = ceil($nfilas/ELE_PAG);
+        $pag = (isset($_POST['pag'])) ? trim($_POST['pag']) : 1;
 
         if (isset($_POST['pag_atras'])) {
-          if ($ind_art-ELE_PAG >=0 ){
-            $ind_art -= ELE_PAG;
+          if ($pag >=0 ){
+            $pag -=;
           } else {
-            $ind_art = 0;
+            $pag = 0;
           }
         }
 
         if (isset($_POST['pag_adelante'])) {
-          if ($ind_art+ELE_PAG <=$numero_articulos ){
-            $ind_art += ELE_PAG;
+          if ($pag <=$npags ){
+            $pag +=;
           } else {
-            $ind_art = $ind_art;
+            $pag = $pag;
           }
         }
 
-        $listado_articulos_paginado = (array_slice($_SESSION['listado_articulos'], $ind_art, ELE_PAG, true));?>
+    // Rellena el array de articulos e indexa los ELE_PAG comenzando de la página proporcionada;
+
+        rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock'], $pag); // El segundo parámetro  define el orden.
+        $listado_articulos_paginado = $_SESSION['listado_articulos'];
+        $numero_articulos = total_articulos();?>
 
 
   <div class="principal"><?php

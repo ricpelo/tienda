@@ -86,9 +86,9 @@
 
         actualiza_stock($codigo_art, -1);
        $_SESSION['listado_articulos'][$codigo_art][2] --;
-       if ($_SESSION['listado_articulos'][$codigo_art][2] == 0) {
+/*       if ($_SESSION['listado_articulos'][$codigo_art][2] == 0) {
         unset($_SESSION['listado_articulos'][$codigo_art]);
-       }
+       }*/
        
         $con = conectar();
         $res = pg_query($con, "select descripcion, precio from articulos where codigo = $codigo_art");
@@ -182,11 +182,14 @@
       return count($_SESSION['detalle_pedido']);
     }
 
-    function rellenar_array_articulos($filtro, $order, $stock) {
+    function rellenar_array_articulos($filtro, $order, $stock, $pag) {
+        
+        $num_ele = ELE_PAG;
+ 
         $_SESSION['listado_articulos'] = array(); // Crea el array para almacenar los artículos
         $con = conectar();
         if ($stock) {
-          $res = pg_query($con, "select * from articulos where existencias>0 and upper(descripcion) like upper('%$filtro%') order by $order");
+          $res = pg_query($con, "select * from articulos where existencias>0 and upper(descripcion) like upper('%$filtro%') order by $order limit $num_ele offset ($pag-1)*$num_ele");
         } else {
           $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%') order by $order");          
         }

@@ -256,6 +256,10 @@ p.footer {
   font-weight: bolder;
 }
 
+.img_post {
+   color:green;
+}
+
 /* FIN FORMATOS PÁRRAFO */
 
 
@@ -289,6 +293,10 @@ p.footer {
 
   td {
     height: 30px;
+  }
+
+  .celdas_vacias {
+    border: none;
   }
 
 
