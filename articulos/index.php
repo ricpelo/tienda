@@ -20,6 +20,7 @@
         global $criterio;
         global $orden;
         global $sentido;
+        global $nenlaces;
         
         $url = "&columna=$columna&";
         $url .= "criterio=$criterio&";
@@ -32,13 +33,24 @@
 			<a href="<?="index.php?pag=$anterior".$url?>">&lt;</a><?php
 		}
 
-		for ($i = 1; $i <= $npags; $i++) {
-			if ($i == $pag) { ?>
-				<?= $i ?><?php
-			} else { ?>
-				<a href="index.php?pag=<?= $i.$url ?>"><?= $i ?></a><?php
-			}
-		}
+        $nenlaceslado = floor($nenlaces/2);
+        $limite = $pag+$nenlaceslado;
+
+		for ($i = $pag-$nenlaceslado; $i <= $limite; $i++) {
+			if ($i <= 0) {
+                $limite++;
+                continue; 
+            }
+            if ($i > $npags) {
+                continue;
+            }
+            
+            if ($i == $pag) { ?>
+                <?= $i ?><?php
+            } else { ?>
+            <a href="index.php?pag=<?= $i.$url ?>"><?= $i ?></a><?php
+            }
+        }
 
 		if ($pag < $npags) { ?>
 			<a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
@@ -65,6 +77,7 @@
     $fpp = 3;
     $npags = ceil($nfilas/$fpp);
     $pag = isset($_GET['pag']) ? trim($_GET['pag']) : 1;
+    $nenlaces = 5;
 
     $columna = isset($_GET['columna']) ? trim($_GET['columna']) : "codigo";
     $criterio = isset($_GET['criterio']) ? trim($_GET['criterio']) : "";
