@@ -9,12 +9,36 @@
 
     require '../comunes/auxiliar.php';
 
-    $usuario = comprobar_administrador();
-    $nick = comprobar_nick($usuario);
+    
 
-    $nfilas = contar_filas('articulos');?>
+    function menu_paginacion()
+    {
+        global $fpp;
+        global $pag;
+        global $npags;
+        global $columna;
+        global $criterio;
+        global $orden;
+        global $sentido;
+        
+        $url = "&columna=$columna&";
+        $url .= "criterio=$criterio&";
+        $url .= "orden=$orden&";
+        $url .= "sentido=$sentido";
+        $siguiente = $pag+1;
+        $anterior = $pag-1;
 
-    <p style="text-align: right">Administrador: <strong><?=$nick?></strong></p><hr><?php
+        if ($pag > 1 && $pag < $npags){?>
+            <a href="<?="index.php?pag=$anterior".$url?>">&lt;</a> 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
+        } elseif ($pag == 1 && $pag < $npags){?>
+            <a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
+        } elseif ($pag > 1 && $pag == $npags){?>
+            <a href="<?="index.php?pag=$anterior".$url?>">&lt;</a><?php
+        }
+
+    }
 
     function sentido($orden, $sentido, $k)
     {
@@ -25,20 +49,29 @@
         else
         {
             $ret = "asc";
-        }
-      
+        }      
         return $ret;
     }
 
-    $columna = isset($_GET['columna']) ? $_GET['columna'] : "codigo";
-    $criterio = isset($_GET['criterio']) ? $_GET['criterio'] : "";
-    $orden = isset($_GET['orden']) ? $_GET['orden'] : "codigo";
-    $sentido = isset($_GET['sentido']) ? $_GET['sentido'] : "asc";
+    $usuario = comprobar_administrador();
+    $nick = comprobar_nick($usuario);
+
+    $nfilas = contar_filas('articulos');
+    $fpp = 10;
+    $npags = ceil($nfilas/$fpp);
+    $pag = isset($_GET['pag']) ? trim($_GET['pag']) : 1;
+
+    $columna = isset($_GET['columna']) ? trim($_GET['columna']) : "codigo";
+    $criterio = isset($_GET['criterio']) ? trim($_GET['criterio']) : "";
+    $orden = isset($_GET['orden']) ? trim($_GET['orden']) : "codigo";
+    $sentido = isset($_GET['sentido']) ? trim($_GET['sentido']) : "asc";
 
     $cols = array('codigo' => 'Código',
                   'descripcion' => 'Descripción',
                   'precio' => 'Precio',
-                  'existencias' => 'Existencias');
+                  'existencias' => 'Existencias');?>
+
+    <p style="text-align: right">Administrador: <strong><?=$nick?></strong></p><hr><?php
 
     if (!isset($cols[$columna]) || $criterio == "")
     {
@@ -72,11 +105,14 @@
     $res = pg_query($con, "select *
                              from articulos
                            $where
-                            order by $orden $sentido");?>
+                            order by $orden $sentido
+                            limit $fpp
+                           offset ($pag-1)*$fpp");?>
 
     <form action="index.php" method="get">
         <input type="hidden" name="orden" value="<?= $orden ?>" />
         <input type="hidden" name="sentido" value="<?= $sentido ?>" />
+        <input type="hidden" name="pag" value="<?= $pag ?>" />
         <label for="columna">Buscar por:</label>
         <select name="columna"><?php
             foreach ($cols as $k => $v):?>
@@ -90,11 +126,11 @@
     </form>
     <hr>
 
-    <table border="1">
+    <table border="1" style="margin:auto">
         <thead><?php
             foreach ($cols as $k => $v):?>
                 <th><?php
-                    $url  = "index.php?columna=$columna&criterio=$criterio&";
+                    $url  = "index.php?columna=$columna&criterio=$criterio&pag=$pag&";
                     $url .= "orden=$k&sentido=";
                     $url .= sentido($orden, $sentido, $k); ?>
                     <a href="<?= $url ?>"><?= $v ?></a><?php
@@ -128,6 +164,9 @@
                     </td>
                 </tr><?php
             endfor;?>
+            <tr>
+            <td colspan="<?=count($cols)+2?>" style="text-align:center;line-height: 30px"><?=menu_paginacion();?></td>
+            </tr>
         </tbody>
     </table>
 

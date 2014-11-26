@@ -53,5 +53,7 @@
 
     $fila = pg_fetch_assoc($res);
 
+    pg_close();
+
     return $fila['nfilas'];
   }
