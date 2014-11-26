@@ -78,16 +78,16 @@
         $pag = (isset($_POST['pag'])) ? trim($_POST['pag']) : 1;
 
         if (isset($_POST['pag_atras'])) {
-          if ($pag >=0 ){
-            $pag -=;
+          if ($pag > 0 ){
+            $pag --;
           } else {
             $pag = 0;
           }
         }
 
         if (isset($_POST['pag_adelante'])) {
-          if ($pag <=$npags ){
-            $pag +=;
+          if ($pag < $npags ){
+            $pag ++;
           } else {
             $pag = $pag;
           }
