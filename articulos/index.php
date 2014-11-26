@@ -28,16 +28,21 @@
         $siguiente = $pag+1;
         $anterior = $pag-1;
 
-        if ($pag > 1 && $pag < $npags){?>
-            <a href="<?="index.php?pag=$anterior".$url?>">&lt;</a> 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
-        } elseif ($pag == 1 && $pag < $npags){?>
-            <a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
-        } elseif ($pag > 1 && $pag == $npags){?>
-            <a href="<?="index.php?pag=$anterior".$url?>">&lt;</a><?php
-        }
+		if ($pag > 1) { ?>
+			<a href="<?="index.php?pag=$anterior".$url?>">&lt;</a><?php
+		}
 
+		for ($i = 1; $i <= $npags; $i++) {
+			if ($i == $pag) { ?>
+				<?= $i ?><?php
+			} else { ?>
+				<a href="index.php?pag=<?= $i.$url ?>"><?= $i ?></a><?php
+			}
+		}
+
+		if ($pag < $npags) { ?>
+			<a href="<?="index.php?pag=$siguiente".$url?>">&gt;</a><?php
+		}
     }
 
     function sentido($orden, $sentido, $k)
@@ -57,7 +62,7 @@
     $nick = comprobar_nick($usuario);
 
     $nfilas = contar_filas('articulos');
-    $fpp = 10;
+    $fpp = 3;
     $npags = ceil($nfilas/$fpp);
     $pag = isset($_GET['pag']) ? trim($_GET['pag']) : 1;
 
