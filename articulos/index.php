@@ -35,13 +35,20 @@
 
         $nenlaceslado = floor($nenlaces/2);
         $limite = $pag+$nenlaceslado;
+        $resto = ceil($nenlaces%2);
 
-		for ($i = $pag-$nenlaceslado; $i <= $limite; $i++) {
+        if ($pag-$nenlaceslado < $nenlaces -1){
+            $i = $pag-$nenlaceslado;
+        }else{
+            $i = $pag - $nenlaceslado - $resto - ($pag - $npags) -1;
+        }
+
+		for ($i; $i <= $limite; $i++) {
 			if ($i <= 0) {
                 $limite++;
                 continue; 
             }
-            if ($i > $npags) {
+            if ($i > $npags) {    
                 continue;
             }
             
