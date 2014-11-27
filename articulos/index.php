@@ -28,30 +28,24 @@
         $url .= "sentido=$sentido";
         $siguiente = $pag+1;
         $anterior = $pag-1;
+        $nenlaceslado = floor($nenlaces/2);
 
 		if ($pag > 1) { ?>
 			<a href="<?="index.php?pag=$anterior".$url?>">&lt;</a><?php
 		}
 
-        $nenlaceslado = floor($nenlaces/2);
-        $limite = $pag+$nenlaceslado;
-        $resto = ceil($nenlaces%2);
-
-        if ($pag-$nenlaceslado < $nenlaces -1){
+        if ($pag - $nenlaceslado <= 0) {
+            $i = 1;
+            $fin = $nenlaces;
+        } elseif ($npags - $pag <= $nenlaceslado) {
+            $i = $npags - $nenlaces;
+            $fin = $npags;
+        } else{
             $i = $pag-$nenlaceslado;
-        }else{
-            $i = $pag - $nenlaceslado - $resto - ($pag - $npags) -1;
+            $fin = $pag+$nenlaceslado;
         }
 
-		for ($i; $i <= $limite; $i++) {
-			if ($i <= 0) {
-                $limite++;
-                continue; 
-            }
-            if ($i > $npags) {    
-                continue;
-            }
-            
+		for ($i; $i <= $fin; $i++) {            
             if ($i == $pag) { ?>
                 <?= $i ?><?php
             } else { ?>
