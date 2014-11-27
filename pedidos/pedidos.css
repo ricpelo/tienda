@@ -107,7 +107,7 @@ footer {
   width: 200px;
   height: 32px;
   display: table;
-  background-image: url("../images/paginado_centro.png");
+  /* background-image: url("../images/paginado_centro.png");*/
 }
 .paginado_izq {
   left: 0px;
@@ -197,7 +197,7 @@ p {
   font: 14px verdana, sans-serif;
 }
 
-p.copyright {
+.copyright {
   color: #aaa;
   text-align: center;
   font-size: 0.6em;

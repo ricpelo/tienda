@@ -72,33 +72,42 @@
 
         // CONTROL DEL PAGINADO
 
-        $ind_art = (isset($_POST['ind_art'])) ? $_POST['ind_art'] : 0;
-        $nfilas = contar_filas("articulos");
-        $npags = ceil($nfilas/ELE_PAG);
+        $numero_filas = contar_filas("articulos");
+        $numero_articulos = contar_articulos($filtro, $_SESSION['stock']);
+        $npags = ceil($numero_articulos/ELE_PAG);
         $pag = (isset($_POST['pag'])) ? trim($_POST['pag']) : 1;
 
         if (isset($_POST['pag_atras'])) {
+<<<<<<< HEAD
           if ($pag > 0 ){
             $pag --;
           } else {
             $pag = 0;
+=======
+          if ($pag >1 ){
+            $pag --;
+>>>>>>> Ajustes paginación
           }
         }
 
         if (isset($_POST['pag_adelante'])) {
           if ($pag < $npags ){
             $pag ++;
+<<<<<<< HEAD
           } else {
             $pag = $pag;
+=======
+>>>>>>> Ajustes paginación
           }
         }
 
-    // Rellena el array de articulos e indexa los ELE_PAG comenzando de la página proporcionada;
+    // Rellena el array de articulos e indexa los ELE_PAG comenzando por la página proporcionada;
 
-        rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock'], $pag); // El segundo parámetro  define el orden.
-        $listado_articulos_paginado = $_SESSION['listado_articulos'];
-        $numero_articulos = total_articulos();?>
+        if ($pag >= 1 && $pag <= $npags) {
+          rellenar_array_articulos($filtro, "descripcion", $_SESSION['stock'], $pag); // El segundo parámetro  define el orden.
+        }
 
+        $listado_articulos_paginado = $_SESSION['listado_articulos'];?>
 
   <div class="principal"><?php
     include ('../comunes/header.php');?>
@@ -132,14 +141,14 @@
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_add" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                      <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+                      <input type="hidden" name="pag" value ="<?= $pag ?>" />
                       <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/insertar24.png" title="Añadir" alt="Añadir" />
                     </form>
                     <form style="display:inline" action="insertar.php" method="POST">
                       <input type="hidden" name="codigo_del" value ="<?= $k ?>" />
                       <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-                      <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+                      <input type="hidden" name="pag" value ="<?= $pag ?>" />
                       <input type="hidden" name="filtro" value="<?= $filtro ?>" />
                       <input type="image" src="../images/borrar24.png" title="Borrar" alt="Borrar" />
                     </form>
@@ -152,19 +161,20 @@
           <div class="paginador">
             <form class="paginado_izq" action="insertar.php" method="POST">
               <input type="hidden" name="pag_atras" value ="" />
-              <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+              <input type="hidden" name="pag" value ="<?= $pag ?>" />
               <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
               <input type="hidden" name="filtro" value="<?= $filtro ?>" />
               <input type="image" src="../images/left_arrow.png" title="Pág. Anterior" alt="Pág. Anterior" />
             </form>
             <div class="paginado_centro subtitulo">
               <div class="centro">
-                <?= $ind_art+1 ?>-<?= (($ind_art+ELE_PAG > $numero_articulos) ? $numero_articulos : $ind_art+ELE_PAG) ?> de <?= $numero_articulos ?> artículos
+                Página <?= $pag ?> de <?= $npags ?>.<br/>
+                <span class="copyright">(Nº. Artículos: <?= $numero_articulos ?> de <?= $numero_filas ?>)</span>
               </div>
             </div>
             <form class="paginado_der" action="insertar.php" method="POST">
               <input type="hidden" name="pag_adelante" value ="" />
-              <input type="hidden" name="ind_art" value ="<?= $ind_art ?>" />
+              <input type="hidden" name="pag" value ="<?= $pag ?>" />
               <input type="hidden" name="filtro" value="<?= $filtro ?>" />
               <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
               <input type="image" src="../images/right_arrow.png" title="Pág. Siguiente" alt="Pág. Siguiente" />
@@ -180,8 +190,7 @@
         <form action="insertar.php" method="POST">
           <input class="filtrar" type="text" name="filtro" placeholder="Búsqueda para filtro" />
           <input type="hidden" name="id_unica" value="<?= $_SESSION['id_unica'] ?>" />
-        </form><?php
- ?>
+        </form>
         <form class="stock" action="insertar.php" method="POST">
           <input type="hidden" name="stock_flag" value ="<?= $stock_flag ?>" />
           <input type="hidden" name="filtro" value="<?= $filtro ?>" />

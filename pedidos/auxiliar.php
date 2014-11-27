@@ -191,9 +191,17 @@
         if ($stock) {
           $res = pg_query($con, "select * from articulos where existencias>0 and upper(descripcion) like upper('%$filtro%') order by $order limit $num_ele offset ($pag-1)*$num_ele");
         } else {
-          $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%') order by $order");          
+          $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%') order by $order limit $num_ele offset ($pag-1)*$num_ele");
         }
-        if (pg_affected_rows($res) >0) {
+        if (pg_affected_rows($res) == 0) {
+          if ($stock) {
+            $res = pg_query($con, "select * from articulos where existencias>0
+                                            order by $order limit $num_ele offset ($pag-1)*$num_ele");
+          } else {
+            $res = pg_query($con, "select * from articulos
+                                            order by $order limit $num_ele offset ($pag-1)*$num_ele");
+          }          
+        } else {
           for ($i=0; $i < pg_affected_rows($res) ; $i++) { 
             $fila = pg_fetch_assoc($res, $i);
             extract($fila);
@@ -202,6 +210,25 @@
             }
           }
         }
+    }
+
+    function contar_articulos($filtro, $stock) {
+
+      $con = conectar();
+      if ($stock) {
+        $res = pg_query($con, "select * from articulos where existencias>0 and upper(descripcion) like upper('%$filtro%')");
+      } else {
+        $res = pg_query($con, "select * from articulos where upper(descripcion) like upper('%$filtro%')");
+      }
+
+      if (pg_affected_rows($res) == 0) {
+        if ($stock) {
+          $res = pg_query($con, "select * from articulos where existencias>0");
+        } else {
+          $res = pg_query($con, "select * from articulos");
+        }          
+      }
+      return pg_affected_rows($res);
     }
 
     function paginado($array, $numero_articulos) {
