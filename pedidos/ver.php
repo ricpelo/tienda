@@ -13,14 +13,13 @@
   $con = conectar();
   $id = 1;
   $colslinea= array('codigo' => 'Codigo',  
-               		'articulo_id' => 'Id articulo',
                 	'descripcion' => 'Descripcion',
                 	'precio' =>  'Precio',
   					'cantidad' => "Cantida");
 
   $id = $_GET['id'];
      
-  $lineaspedidos= pg_query($con, "select * from lineas_pedidos where pedido_id = $id");?>
+  $lineaspedidos= pg_query($con, "select * from lineas_pedidos where pedido_id::text = '$id'");?>
   <table border="1">
         <thead><?php
             foreach ($colslinea as $k => $v):?>
